@@ -149,9 +149,11 @@ After this, the only external hosts referenced by `index.html` are `fonts.google
 
 By default the preset rewrites every `fonts.googleapis.com` / `fonts.gstatic.com` URL to `https://miaoda.feishu.cn/fonts`. That mirror **is publicly reachable** and serves real font files, so it is not broken — but it is a platform dependency you probably do not want.
 
-`MIAODA_FONTS_MIRROR_OFF=1` disables the rewrite. Verified: with the flag, the built HTML points at Google Fonts directly.
+`MIAODA_FONTS_MIRROR_OFF=1` is meant to disable the platform's font-mirror rewrite. **Measured: it does not work.** With or without the flag, the built HTML still carries three `<link>` tags pointing at `miaoda.feishu.cn/fonts` (two preconnects, one stylesheet), and the build log contains no font-related output at all.
 
-If Google Fonts is blocked on your network, either omit the flag, or self-host the fonts — see [Customization §4](CUSTOMIZATION.md).
+What actually fixes it is the rewrite step inside the strip script. The environment variable is kept only so the setup still works if the platform fixes it later — **do not rely on it**.
+
+If Google Fonts is blocked on your network, self-host the fonts — see [Customization §4](CUSTOMIZATION.md). Dropping the flag will not help, since it has no effect.
 
 ## 5. Assemble the deployable directory
 
@@ -275,7 +277,8 @@ The application renders and functions correctly with these present. They were ob
 | Blank page, 404 on every `/assets/*` | HTML and assets not merged | §5 |
 | Root works, deep links 404 | No SPA fallback | §6.1 |
 | Everything 404 under a sub-directory | Absolute base path | §7 |
-| Fonts fall back to system serif | Google Fonts blocked | Drop `MIAODA_FONTS_MIRROR_OFF=1`, or self-host |
+| Fonts fall back to system serif | Google Fonts blocked | Self-host the fonts (dropping the flag has no effect) |
+| A platform watermark appears bottom-right | Not using this repo's `vite.config.ts` | That file uses `define` to set the client build target to `standalone`, which makes `AppContainer` skip the watermark; keep it |
 | Map tiles blank | No network, or Esri unreachable | Map needs internet; see [Third-Party Notices](THIRD-PARTY-NOTICES.md) |
 | `test:gate` fails with "artefacts not found" | Build not run yet | `npm run build` first |
 | One 7 MB `index.js`, no other chunks | You built in standalone mode | Use Mode C (§4.3) |

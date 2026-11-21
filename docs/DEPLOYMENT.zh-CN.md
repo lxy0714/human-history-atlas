@@ -141,7 +141,15 @@ node scripts/strip-platform-telemetry.mjs
 [strip-telemetry] ✓ 复核通过：产物中已无平台遥测主机
 ```
 
-处理之后，`index.html` 引用的外部主机只剩 `fonts.googleapis.com`、`fonts.gstatic.com`（字体）与 `schema.org`（JSON-LD 标识符，不发网络请求）。**107 个 JS chunk 完整保留。**
+处理之后，`index.html` 引用的外部主机只剩 `fonts.googleapis.com`、`fonts.gstatic.com`（字体）与 `schema.org`（JSON-LD 标识符，不发网络请求）。**代码分割完整保留（当前 109 个 JS chunk）。**
+
+脚本做三件事，缺一不可：
+
+1. 摘掉 4 个平台遥测脚本；
+2. 回填 6 处 `{{appName}}` 之类的占位符；
+3. **把 3 处平台字体镜像 `miaoda.feishu.cn/fonts` 改写成 Google Fonts 官方源**，并补一条 `fonts.gstatic.com` 的 preconnect。
+
+第 3 条是后加的，因为实测发现 `MIAODA_FONTS_MIRROR_OFF=1` **并不会移除那三条 `<link>`**。在补上这段之前，脚本每次都会以 exit 2 结束并警告残留主机。
 
 `scripts/strip-platform-telemetry.mjs` 是幂等的——跑两次安全，第二次会报"已是干净的"。它只删命中遥测特征的 `<script>` 块，JSON-LD 明确保留。
 
@@ -149,9 +157,11 @@ node scripts/strip-platform-telemetry.mjs
 
 preset 默认把所有 `fonts.googleapis.com` / `fonts.gstatic.com` 地址改写到 `https://miaoda.feishu.cn/fonts`。这个镜像**公网确实可达**、返回真实字体文件，所以它没坏——但它是你多半不想要的平台依赖。
 
-`MIAODA_FONTS_MIRROR_OFF=1` 关掉改写。实测：加了这个变量，产物 HTML 直连 Google Fonts。
+`MIAODA_FONTS_MIRROR_OFF=1` 本意是关掉平台的字体镜像改写。**实测它并不生效**：加与不加，产物 HTML 里都还是三条指向 `miaoda.feishu.cn/fonts` 的 `<link>`（两条 preconnect、一条 stylesheet），构建日志里也没有任何字体相关输出。
 
-如果你的网络访问不了 Google Fonts，要么别加这个变量，要么自托管字体——见[自行修改教程第四节](CUSTOMIZATION.zh-CN.md)。
+真正起作用的是 strip 脚本里的改写步骤。保留这个环境变量只是为了将来平台修好后能自然衔接，**不要依赖它**。
+
+如果你的网络访问不了 Google Fonts，请自托管字体——见[自行修改教程第四节](CUSTOMIZATION.zh-CN.md)。去掉环境变量没有用，因为它本来就不生效。
 
 ## 五、组装可部署目录
 
@@ -275,7 +285,8 @@ node scripts/strip-platform-telemetry.mjs
 | 白屏，`/assets/*` 全 404 | HTML 与资源没合并 | 第五节 |
 | 根路径正常、深链 404 | 没配 SPA fallback | 6.1 |
 | 放子目录后全 404 | 绝对 base path | 第七节 |
-| 字体回落成系统衬线 | Google Fonts 被墙 | 去掉 `MIAODA_FONTS_MIRROR_OFF=1`，或自托管 |
+| 字体回落成系统衬线 | Google Fonts 被墙 | 自托管字体（去掉环境变量无效，它本来就不生效） |
+| 右下角出现「妙搭生成」水印 | 没走本仓库的 `vite.config.ts` | 该文件用 `define` 把客户端 build target 设为 `standalone`，`AppContainer` 据此不渲染水印；沿用它即可 |
 | 地图瓦片空白 | 无网络或 Esri 不可达 | 地图需要联网，见[第三方素材声明](THIRD-PARTY-NOTICES.zh-CN.md) |
 | `test:gate` 报找不到产物 | 还没构建 | 先 `npm run build` |
 | 只有一个 7 MB 的 `index.js` | 你用了 standalone 模式 | 改用模式 C（4.3） |

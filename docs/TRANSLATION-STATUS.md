@@ -6,7 +6,7 @@ Human History Atlas · [Back to README](../README.md)
 
 ---
 
-**The goal is full bilingual coverage, including the entire corpus. The interface and all node metadata now meet it; the long-form corpus does not.** This page states exactly where things stand, with numbers you can regenerate yourself, and what is left.
+**The goal is full bilingual coverage, including the entire corpus. The interface, metadata, years and taxonomy labels now meet it and are browser-verified; the long-form corpus does not.** This page states exactly where things stand, with numbers you can regenerate yourself, and what is left.
 
 Last measured: **2026-11-21**, against the source in this repository.
 
@@ -14,13 +14,25 @@ Last measured: **2026-11-21**, against the source in this repository.
 
 | Layer | Chinese | English | Coverage |
 |---|---|---|---|
-| UI dictionary | complete | **539 keys / 58 groups** | partial |
-| Components with no hardcoded Chinese | — | **55 of 137** `.tsx` | **40.1%** |
+| UI dictionary | complete | **580 keys / 59 groups, no missing keys** | **100%** (test-locked) |
+| Visible copy in the four main views | complete | **Timeline / Map / Encyclopedia / Special Hall: no Chinese** | **100%** (browser-verified) |
 | Node titles + summaries | 763 nodes | **763 / 763** | **100%** |
-| Era / category / civilisation names | 7 + 6 + 10 | **23 / 23** | **100%** |
+| Year display strings | 763 nodes | **763 / 763, zero fallback** | **100%** (test-locked) |
+| Era / category / civilisation names | 7 + 6 + 10 | **23 / 23** (both copies agree) | **100%** (test-locked) |
+| Era descriptions | 7 | **7 / 7** | **100%** |
+| Empire names + capitals | 37 + 33 | **37 / 37 + 33 / 33** | **100%** |
+| Special Hall card titles + blurbs | 27 | **27 / 27** | **100%** |
 | Long-form bodies | 763 nodes (~810,738 chars) | **15 / 763** (7,649 words) | **2.0%** |
 
-**Read that last row again.** 98% of the long-form corpus is still Chinese-only. Titles, summaries and every taxonomy label are fully bilingual; the essays are not. That is the honest state of the project's headline goal.
+**Read that last row again.** 98% of the long-form corpus is still Chinese-only. The interface, titles, summaries, years, taxonomy labels, empires and topic cards are fully bilingual; the essays are not. That is the honest state of the project's headline goal.
+
+### How "no Chinese" was measured
+
+Not by grep, and not by `tsc` / `eslint` / unit tests passing — all of those were green while the page was still full of Chinese. The method: build and strip the artefact as described in the [deployment guide](DEPLOYMENT.md), serve it statically, switch the browser to English, then walk every visible text node under `document.body` and count the strings that still contain CJK characters.
+
+Each of the four main views returned **exactly one string: `史`**. That is the brand monogram in the header — a logo, not copy, and deliberately not translated.
+
+The scope limit matters: **the 27 sub-applications inside Special Hall, the long-form area of the detail panel, and the mobile bottom tab bar have not each had the same measurement.** The 100% above covers the default visible content of the four main views, not every corner of the site.
 
 ### A note on the corpus size
 

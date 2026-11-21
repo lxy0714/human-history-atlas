@@ -10,11 +10,17 @@
 
 > ### ⚠️ Read this first: the interface is bilingual, the corpus is not
 >
-> Chinese is complete. In English, **every node title, summary and taxonomy label is translated**; the long-form articles are not, and ship with an explicit fallback. Nothing is silently machine-translated or faked.
+> Chinese is complete. In English, **the four main views are browser-verified to contain no Chinese, and every node title, summary, year and taxonomy label is translated**; the long-form articles are not, and ship with an explicit fallback. Nothing is silently machine-translated or faked.
+>
+> Scope note: the 27 sub-applications inside Special Hall and the long-form area of the detail panel have not each had the same measurement.
 >
 > | Layer | Chinese | English |
 > |---|---|---|
-> | UI strings | 100% | partial — core views done; 82 of 137 components still hold literals |
+> | Visible copy, four main views | 100% | **no Chinese** (browser-verified; only the `史` brand mark remains) |
+> | UI dictionary | 100% | **580 keys, none missing** (test-locked) |
+> | Year display strings | 763 nodes | **763 / 763 — 100%** (test-locked) |
+> | Empire names / capitals | 37 / 33 | **37 / 37 · 33 / 33 — 100%** |
+> | Special Hall cards | 27 | **27 / 27 — 100%** |
 > | Node titles & summaries | 763 nodes | **763 / 763 — 100%** |
 > | Era / category / civilisation names | 23 | **23 / 23 — 100%** |
 > | Long-form article bodies | ~810,738 characters | 15 / 763 nodes; remainder falls back to Chinese **with a visible notice** |

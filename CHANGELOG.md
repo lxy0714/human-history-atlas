@@ -14,9 +14,29 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Fixed
+
+- **The four main views are browser-verified to contain no Chinese in English mode.** Timeline, satellite map, encyclopedia and Special Hall were each switched to English and every visible text node walked; each returned only the header brand mark `史` (a logo, deliberately untranslated). Previously `tsc`, `eslint`, the unit tests and the build were all green while the page was still full of Chinese — the defect was only visible by reading the rendered DOM.
+- **First-screen constants were missing English names.** `history-constants.ts` carried a second copy of `CIVILIZATIONS` and `CATEGORIES` without `nameEn`. Components importing from it rendered Chinese even with correct `ln()` wiring. Both copies now agree, with a new test locking parity against future drift.
+- **Year display strings are fully bilingual.** New `src/i18n/year-display.ts` converts the stored Chinese `yearDisplay` strings, covering dynasties, parentheticals, century ranges, bare years, full dates and verbs; **763/763 with zero fallback**, locked by a test. Nodes carry only `year` and no end year, so ranges cannot be recomputed — hence deterministic string conversion.
+- **Fixed an order-of-magnitude error.** `约300万年前` was rendered as `300 million years ago`; it is `3 million`. Caught by the new test.
+- **`formatYear` / `yearsAgo` are now language-aware at the source**, so all 100+ call sites switch without per-site changes. The Chinese output is byte-for-byte unchanged.
+- **Restored 8 dictionary keys corrupted by an earlier batch script** (the string literal `'swimlane.title'` had become `'nt(swimlane)'`), which made English mode fall back to Chinese silently. Added a "no missing keys" test.
+- **Search now matches both languages.** Summary and year previously matched only the translation, so Chinese queries returned nothing in English mode. Four files affected.
+- **Empires and capitals are fully bilingual**: `nameEn` added and wired for 37 empires and 33 capitals.
+- **All 27 Special Hall cards** gained English titles and blurbs; **all 7 era descriptions** gained English, added at the generator source `history.ts` so regenerating the index does not drop them.
+
+### Changed
+
+- **The strip script now rewrites the font mirror.** Measurement showed `MIAODA_FONTS_MIRROR_OFF=1` does not remove the three `miaoda.feishu.cn/fonts` links; the script previously exited 2 on every clean build. It now rewrites them to the real Google Fonts origin and adds a `gstatic` preconnect. Idempotent, with a passing re-check.
+- **Removed the platform watermark.** `vite.config.ts` uses `define` to set the client build target to `standalone`, so `AppContainer` no longer renders the platform badge. **Code splitting is fully preserved (109 chunks)**, unlike the real standalone build target.
+- Removed 8 one-off `.tmp.ts` scripts that had been committed, and blocked the pattern in `.gitignore`.
+- Tests grew from 154 to **171**, with three new suites: constants parity, zero missing dictionary keys, zero year-display fallback.
+
 ### Known outstanding work
 
-- **Bilingual coverage is incomplete.** UI partially translated; 133/763 nodes with English metadata; 15/763 nodes with English bodies. Full corpus translation is the project's largest open task.
+- **Long-form bilingual coverage is incomplete.** The interface, metadata, years and taxonomy labels are fully bilingual and browser-verified; **English bodies still cover only 15/763 nodes** (~810,000 characters left to translate). Full corpus translation is the project's largest open task.
+- The 27 sub-applications inside Special Hall, the long-form area of the detail panel, and the mobile bottom tab bar have not each had an English-mode DOM measurement.
 - `medieval-china-a` shard sits at **109,334 bytes gzip** against a 110,000 soft limit — **666 bytes (0.61%) of headroom**. Needs splitting.
 - Site-wide audit of sub-44px touch targets on mobile not completed.
 - `document.documentElement.lang` stays `zh-CN` after switching the interface to English. Real accessibility defect, confirmed by browser inspection, not yet fixed.
