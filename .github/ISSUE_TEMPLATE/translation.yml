@@ -1,0 +1,36 @@
+name: "翻译 / Translation"
+description: "认领或提交翻译 / Claim or submit translation work"
+title: "[i18n] "
+labels: ["translation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        先读 docs/TRANSLATION-STATUS.md 与 docs/CUSTOMIZATION.md 第 5 节。
+        Read TRANSLATION-STATUS and CUSTOMIZATION §5 first.
+  - type: dropdown
+    id: layer
+    attributes:
+      label: "层 / Layer"
+      options:
+        - "界面文案 / UI strings"
+        - "节点元数据 / Node metadata"
+        - "长文正文 / Long-form body"
+        - "接线已有 nameEn / Wire up existing nameEn"
+    validations:
+      required: true
+  - type: input
+    id: scope
+    attributes:
+      label: "范围（分片名或节点 id）/ Scope (shard or node ids)"
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: "规则确认 / Rule confirmation"
+      options:
+        - label: "未加空的或占位条目 / No empty or placeholder entries"
+        - label: "未删回退提示卡 / Fallback notice intact"
+        - label: "若用机翻打底，已逐句人工复核 / If MT-assisted, every sentence human-reviewed"
+        - label: "翻译未增删史实信息 / No historical information added or removed"

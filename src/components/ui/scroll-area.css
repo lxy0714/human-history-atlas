@@ -1,0 +1,22 @@
+/* 修复 Radix ScrollArea Content (display:table) 被长内容撑宽导致横向溢出的问题
+   Radix 的 Viewport 直接子元素（Content）默认 display:table; min-width:100%，
+   table 布局下宽度由最宽子内容的 max-content 决定，长文本/URL 会把整个滚动区撑爆。
+   这里统一改为 block + 宽度锁死 100%，让纵向滚动正常工作且不横向溢出。 */
+
+[data-slot="scroll-area-viewport"] {
+  overflow-x: hidden !important;
+}
+
+[data-slot="scroll-area-viewport"] > div {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 确保 iOS 触摸滚动流畅 */
+[data-slot="scroll-area-viewport"] {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}

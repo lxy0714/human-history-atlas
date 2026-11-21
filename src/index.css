@@ -1,0 +1,245 @@
+/* ========== Tailwind 及其插件 ========== */
+@import "tailwindcss";
+@import "@lark-apaas/client-toolkit-lite/styles.css";
+@import "tw-animate-css";
+@import "leaflet/dist/leaflet.css";
+@import "./tailwind-theme.css";
+@import "./typography.css";
+
+/* ========== 全局自定义样式 ========== */
+
+/* 滚动条 - 细窄金色博物馆风 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(40 30% 45% / 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(40 45% 61% / 0.7);
+}
+
+/* 隐藏移动端默认滚动条（横向） */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 玻璃态卡片通用类（实色版，无毛玻璃） */
+.glass-card {
+  background: hsl(28 18% 13%);
+  border: 1px solid hsl(40 45% 61% / 0.15);
+}
+
+/* 金色文字渐变 */
+.text-gold-gradient {
+  background: linear-gradient(135deg, hsl(40 45% 72%), hsl(40 45% 52%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 重要节点脉冲动画 */
+@keyframes pulse-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* 细腻噪点纹理（SVG data url，纯CSS） */
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* 时代分隔装饰线 */
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: hsl(40 45% 61% / 0.4);
+}
+.ornament-divider::before,
+.ornament-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, hsl(40 45% 61% / 0.3), transparent);
+}
+
+/* Leaflet 弹窗定制 */
+.leaflet-popup-content-wrapper {
+  background: hsl(28 18% 13%) !important;
+  border: 1px solid hsl(40 45% 61% / 0.25) !important;
+  border-radius: 2px !important;
+  color: hsl(38 30% 88%) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 8px 32px hsl(0 0% 0% / 0.5) !important;
+}
+.leaflet-popup-tip {
+  background: hsl(28 18% 13%) !important;
+  border: 1px solid hsl(40 45% 61% / 0.25) !important;
+}
+.leaflet-popup-content {
+  margin: 10px 14px !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
+}
+.leaflet-container {
+  background: hsl(28 22% 9%) !important;
+  font-family: 'Noto Sans SC', sans-serif !important;
+}
+.leaflet-control-attribution {
+  background: hsl(28 18% 13%) !important;
+  color: hsl(35 15% 58%) !important;
+  font-size: 10px !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.leaflet-control-attribution a {
+  color: hsl(40 45% 61%) !important;
+}
+
+/* 触摸设备优化 */
+@media (hover: none) {
+  .hover-elevate:hover::after {
+    background-color: transparent !important;
+  }
+}
+
+/* ========== 浅色主题适配 ========== */
+:root.light-mode .leaflet-popup-content-wrapper {
+  background: #fbf6e9 !important;
+  color: #3a2e1f !important;
+  border: 1px solid #c9a96e55 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:root.light-mode .leaflet-popup-tip {
+  background: #fbf6e9 !important;
+  border: 1px solid #c9a96e55 !important;
+}
+:root.light-mode .leaflet-container {
+  background: #e8dfc8 !important;
+}
+:root.light-mode .leaflet-control-attribution {
+  background: #fbf6e9 !important;
+  color: #7a6b55 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:root.light-mode .leaflet-control-attribution a {
+  color: #a8843a !important;
+}
+
+/* Sonner toast 浅色主题适配 */
+:root.light-mode [data-sonner-toaster][data-theme="dark"],
+:root.light-mode [data-sonner-toaster] {
+  --bg: #fbf6e9 !important;
+  --text: #3a2e1f !important;
+  --border: #c9a96e40 !important;
+  --card: #f4ecd8 !important;
+}
+
+/* ========== 节点入场动画 ========== */
+.node-enter {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.node-enter.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .node-enter {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* 路线箭头图标无背景 */
+.route-arrow-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* 节日彩蛋悬浮动画 */
+@keyframes festival-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* ========== 无障碍（A11y） ========== */
+
+/* 全局焦点样式：金色清晰 outline，不依赖浏览器默认 */
+:focus-visible {
+  outline: 2px solid hsl(40 45% 61%) !important;
+  outline-offset: 2px !important;
+}
+
+/* 滚动条不抢焦 */
+::-webkit-scrollbar:focus-visible {
+  outline: none;
+}
+
+/* ========== 性能优化 ========== */
+.timeline-node {
+  content-visibility: auto;
+  contain-intrinsic-size: 80px;
+}
+.timeline-node.timeline-compact {
+  contain-intrinsic-size: 44px;
+}
+
+/* 骨架屏微光动画 */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.03) 25%,
+    rgba(255,255,255,0.07) 50%,
+    rgba(255,255,255,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+.light-mode .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,0.03) 25%,
+    rgba(0,0,0,0.06) 50%,
+    rgba(0,0,0,0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}

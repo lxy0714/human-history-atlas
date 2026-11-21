@@ -1,0 +1,50 @@
+name: "Bug 报告 / Bug report"
+description: "报告应用缺陷 / Report an application defect"
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: "做了什么 / 期望什么 / 实际什么 — Steps, expected, actual"
+    validations:
+      required: true
+  - type: input
+    id: viewport
+    attributes:
+      label: "视口宽度 / Viewport width"
+      placeholder: "1280 / 390"
+    validations:
+      required: true
+  - type: dropdown
+    id: theme
+    attributes:
+      label: "主题 / Theme"
+      options: ["museum 博物馆","ink 墨夜","parchment 羊皮纸","xuanzhi 宣纸","bamboo 竹简"]
+    validations:
+      required: true
+  - type: dropdown
+    id: lang
+    attributes:
+      label: "语言 / Language"
+      options: ["中文 zh","English en"]
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: "浏览器与系统 / Browser and OS"
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: "控制台输出 / Console output"
+      description: "注意：静态托管下有几条已知无害报错，见 docs/DEPLOYMENT.md 第 8 节 / Known harmless errors on static hosts: see DEPLOYMENT §8"
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "确认 / Confirm"
+      options:
+        - label: "干净重载后仍复现 / Reproduces on a clean reload"
+        - label: "已附截图（视觉类问题）/ Screenshot attached (visual issues)"

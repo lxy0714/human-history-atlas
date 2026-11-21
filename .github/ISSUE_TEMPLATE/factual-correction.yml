@@ -1,0 +1,57 @@
+name: "史实纠错 / Factual correction"
+description: "报告内容库中的史实错误 / Report a factual error in the corpus"
+title: "[fact] <node-id>: "
+labels: ["factual-correction", "content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **这是本项目最有价值的贡献。/ This is the most valuable contribution you can make.**
+        内容库是 AI 辅助写作，可能含错误。请附来源。
+        The corpus is AI-assisted writing and may contain errors. A source is required.
+  - type: input
+    id: node
+    attributes:
+      label: "节点 id / Node id"
+      placeholder: "qin-unification"
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: "当前文字 / Current text"
+      description: "原样贴出有问题的那句 / Quote the exact sentence"
+    validations:
+      required: true
+  - type: textarea
+    id: corrected
+    attributes:
+      label: "更正文字 / Corrected text"
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: "来源 / Source"
+      description: |
+        学术著作、一手文献、考古报告或机构出版物。另一部百科或另一个 AI 不算来源。
+        Scholarly work, primary document, archaeological report, or institutional publication.
+        Another encyclopedia or another AI does not count.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: "该来源为何权威 / Why this source is authoritative"
+    validations:
+      required: true
+  - type: dropdown
+    id: contested
+    attributes:
+      label: "学界是否存在分歧？/ Is this contested in scholarship?"
+      options:
+        - "否，来源明确 / No, the source is clear"
+        - "是，存在分歧（建议改用 disputed 字段）/ Yes, contested (consider the disputed field)"
+        - "不确定 / Unsure"
+    validations:
+      required: true
