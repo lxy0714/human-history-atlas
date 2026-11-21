@@ -55,7 +55,7 @@ function getEraGradient(eraId: string): string {
 }
 
 export default memo(function DetailPanel({ store }: DetailPanelProps) {
-  const { t, ln, nt, ns, lang } = useI18n();
+  const { t, ln, nt, ns, lang, ny } = useI18n();
   const { selectedNode, detailTrigger, closeDetail, scrollToNode, openCompare, toggleFavorite, isFavorite, prevNode: storePrev, nextNode: storeNext } = store;
   const isMobile = useIsMobile();
   const progress = useLearningProgress();
@@ -533,7 +533,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
                   top: `calc(${p}% + 16px - 4px)`,
                   backgroundColor: nCivColor,
                 }}
-                title={`${node.yearDisplay}  ${nt(node)}`}
+                title={`${ny(node.yearDisplay)}  ${nt(node)}`}
               />
             );
           })}
@@ -842,7 +842,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
           <div className="min-w-0">
             <p className="text-[10px] text-muted-foreground">{t('detail.timeLabel', '时间')}</p>
              <p className="truncate text-sm font-medium text-foreground tabular-nums font-display">
-              {node.yearDisplay}
+              {ny(node.yearDisplay)}
             </p>
           </div>
         </div>
@@ -1142,7 +1142,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
                            left: `${p}%`,
                            backgroundColor: nCivColor,
                          }}
-                         title={`${node.yearDisplay}  ${nt(node)}`}
+                         title={`${ny(node.yearDisplay)}  ${nt(node)}`}
                        />
                      );
                    })}
@@ -1168,7 +1168,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
                        color: civColor,
                      }}
                    >
-                     {selectedNode?.yearDisplay}
+                     {ny(selectedNode?.yearDisplay)}
                    </div>
                   </div>
                  {/* 上下节点导航（移动端） */}

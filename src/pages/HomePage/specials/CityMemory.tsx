@@ -179,7 +179,7 @@ interface CityMemoryProps {
 }
 
 export default function CityMemory({ store, onBack }: CityMemoryProps) {
-  const { ln, nt, ns } = useI18n();
+  const { ln, nt, ns, ny } = useI18n();
   const [activeCity, setActiveCity] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const { scrollToNode } = store;
@@ -294,7 +294,7 @@ export default function CityMemory({ store, onBack }: CityMemoryProps) {
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-medium tabular-nums text-muted-foreground">
-                        {node.yearDisplay}
+                        {ny(node.yearDisplay)}
                       </span>
                       <span
                         className="size-1 rounded-full"

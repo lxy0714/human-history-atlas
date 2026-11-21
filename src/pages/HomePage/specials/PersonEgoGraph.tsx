@@ -117,7 +117,7 @@ const ALL_PERSON_NODES = ALL_HISTORY_NODES_INDEX.filter(
 );
 
 export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
-  const { nt, ns } = useI18n();
+  const { nt, ns, ny } = useI18n();
   const [centerId, setCenterId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearch = useDebouncedValue(searchQuery, 200);
@@ -143,7 +143,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
       (n) =>
         bilingualHaystack(n.title, nt(n)).toLowerCase().includes(q) ||
         n.id.toLowerCase().includes(q) ||
-        (ns(n) && ns(n).toLowerCase().includes(q)),
+        (ns(n) && bilingualHaystack(n.summary, ns(n)).toLowerCase().includes(q)),
     ).slice(0, 10);
   }, [debouncedSearch]);
 
@@ -205,7 +205,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
             id: centerNode.id,
             title: nt(centerNode),
             type: centerNode.type,
-            yearDisplay: centerNode.yearDisplay,
+            yearDisplay: ny(centerNode.yearDisplay),
             eraId: centerNode.eraId,
           }
         : null,
@@ -257,7 +257,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
       firstNodes.push({
         id: e.to,
         title: nt(node) ?? e.to,
-        yearDisplay: node?.yearDisplay,
+        yearDisplay: ny(node?.yearDisplay),
         x: cx + firstRadius * Math.cos(angle),
         y: cy + firstRadius * Math.sin(angle),
         edge: e,
@@ -273,7 +273,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
         secondNodes.push({
           id: e.to,
           title: nt(node) ?? e.to,
-          yearDisplay: node?.yearDisplay,
+          yearDisplay: ny(node?.yearDisplay),
           x: cx + secondRadius * Math.cos(angle),
           y: cy + secondRadius * Math.sin(angle),
           fromId: e.from,
@@ -334,7 +334,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
                     <div className="min-w-0 flex-1">
                       <div className="truncate font-medium">{nt(n)}</div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {n.yearDisplay}
+                        {ny(n.yearDisplay)}
                       </div>
                     </div>
                   </button>

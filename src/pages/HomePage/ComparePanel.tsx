@@ -64,7 +64,7 @@ export default function ComparePanel({ open, onClose, pair }: ComparePanelProps)
             <div className="flex items-center justify-between border-b border-border/40 px-4 py-3">
               <div className="flex items-center gap-2">
                 <Scale className="size-4 text-primary" />
-                <span className="font-bold font-serif">{t('nt(compare)', '双文明对比')}</span>
+                <span className="font-bold font-serif">{t('compare.title', '双文明对比')}</span>
               </div>
               <button
                 onClick={onClose}
@@ -168,7 +168,7 @@ export default function ComparePanel({ open, onClose, pair }: ComparePanelProps)
               <div className="mt-5 rounded-xl border border-primary/30 bg-primary/5 p-4">
                 <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-primary">
                   <Sparkles className="size-3.5" />
-                  {t('ns(compare)', '对比小结')}
+                  {t('compare.summary', '对比小结')}
                 </div>
                 <p className="text-xs leading-relaxed text-foreground/80">
                   {ns(currentPair)}

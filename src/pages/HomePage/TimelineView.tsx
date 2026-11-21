@@ -73,7 +73,7 @@ const CURVE_COLORS: Record<CivilizationKey, string> = {
 const CIV_KEYS = Object.keys(CIVILIZATION_RISE_FALL) as CivilizationKey[];
 
 export default memo(function TimelineView({ store }: TimelineViewProps) {
-  const { t, ln, nt, ns } = useI18n();
+  const { t, ln, nt, ns, ny } = useI18n();
   const {
     filteredNodes,
     openDetail,
@@ -435,11 +435,11 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
 
   // 类型图例
   const typeLegend = [
-    { type: 'person', label: '人物', shape: 'diamond' },
-    { type: 'event', label: '事件', shape: 'circle' },
-    { type: 'dynasty', label: '朝代', shape: 'square' },
-    { type: 'artifact', label: '文物/建筑', shape: 'triangle' },
-    { type: 'myth', label: '神话', shape: 'star' },
+    { type: 'person', label: t('badge.typePerson', '人物'), shape: 'diamond' },
+    { type: 'event', label: t('badge.typeEvent', '事件'), shape: 'circle' },
+    { type: 'dynasty', label: t('badge.typeDynasty', '朝代'), shape: 'square' },
+    { type: 'artifact', label: t('ui.artifactBuilding', '文物/建筑'), shape: 'triangle' },
+    { type: 'myth', label: t('badge.typeMyth', '神话'), shape: 'star' },
   ];
 
   return (
@@ -461,7 +461,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                 aria-pressed={timelineLayout === 'vertical'}
               >
                 <Rows className="size-3" />
-                时间轴
+                {t('view.timeline', '时间轴')}
               </button>
               <button
                 onClick={() => setTimelineLayout('swimlane')}
@@ -473,11 +473,11 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                 aria-pressed={timelineLayout === 'swimlane'}
               >
                 <LayoutGrid className="size-3" />
-                文明泳道
+                {t('swimlane.title', '文明泳道')}
               </button>
             </div>
             <span className="text-xs text-muted-foreground">
-              共 {filteredNodes.length} 个节点
+              {t('ui.total', '共')} {filteredNodes.length} {t('ui.nodes', '个节点')}
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -539,7 +539,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                舒适
+                {t('ui.comfortable', '舒适')}
               </button>
               <button
                 onClick={() => setDensity('compact')}
@@ -549,7 +549,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                紧凑
+                {t('ui.compact', '紧凑')}
               </button>
             </div>
           </div>
@@ -658,7 +658,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                                          className={`font-medium tabular-nums ${metaSize}`}
                                          style={{ color: civColor }}
                                        >
-                                         {node.yearDisplay}
+                                         {ny(node.yearDisplay)}
                                        </span>
                                        {node.important && (
                                          <CivilBadge variant="important" label={t('timeline.important', '重要')} size="sm" />
@@ -721,8 +721,8 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                        }
 
                        // 聚合簇：折叠态，显示 +N 按钮
-                       const firstYear = cluster.nodes[0]?.yearDisplay ?? '';
-                       const lastYear = cluster.nodes[cluster.nodes.length - 1]?.yearDisplay ?? '';
+                       const firstYear = ny(cluster.nodes[0]?.yearDisplay) ?? '';
+                       const lastYear = ny(cluster.nodes[cluster.nodes.length - 1]?.yearDisplay) ?? '';
                        const importantCount = cluster.nodes.filter((n) => n.important).length;
                        // 统计文明分布，取 Top2 色
                        const civCount: Record<string, number> = {};
@@ -762,7 +762,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                                    {lastYear}
                                  </span>
                                  <span className="text-[11px] text-muted-foreground">
-                                   {cluster.nodes.length} 个节点
+                                   {cluster.nodes.length} {t('ui.nodes', '个节点')}
                                  </span>
                                  {importantCount > 0 && (
                                    <span className="text-[10px] text-amber-500">{importantCount}</span>
@@ -790,7 +790,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                                </div>
                              </div>
                              <span className="text-[11px] text-muted-foreground group-hover:text-primary">
-                               展开 →
+                               {t('ui.expandArrow', '展开 →')}
                              </span>
                            </button>
                          </motion.div>
@@ -818,7 +818,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
             className="mb-2 text-xs font-semibold text-foreground/80"
             style={{ fontFamily: "'Noto Serif SC', serif" }}
           >
-            文明兴衰曲线
+            {t('ui.riseFall', '文明兴衰曲线')}
           </h4>
           <div className="relative">
             <svg
@@ -928,7 +928,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
           </div>
 
           <p className="mt-2 text-[9px] text-muted-foreground/60">
-            点击图例可显隐曲线
+            {t('ui.legendHint', '点击图例可显隐曲线')}
           </p>
         </div>
       </div>

@@ -42,7 +42,7 @@ function getTypeShape(type?: string): string {
 }
 
 export default function PathDetail({ path, store, progress, onBack }: PathDetailProps) {
-  const { nt } = useI18n();
+  const { nt, ny } = useI18n();
   const [currentChapterIdx, setCurrentChapterIdx] = useState(0);
   const achievements = useAchievements();
   const pathPercent = progress.getPathPercent(path);
@@ -246,7 +246,7 @@ export default function PathDetail({ path, store, progress, onBack }: PathDetail
                       )}
                     </div>
                     <div className="mt-0.5 text-[11px] text-muted-foreground">
-                      {node.yearDisplay}
+                      {ny(node.yearDisplay)}
                     </div>
                     {keyPoints && keyPoints[0] && (
                       <p className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground/90">

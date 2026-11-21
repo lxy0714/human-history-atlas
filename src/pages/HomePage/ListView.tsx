@@ -17,7 +17,7 @@ interface ListViewProps {
 }
 
 export default memo(function ListView({ store }: ListViewProps) {
-  const { t, ln, nt, ns } = useI18n();
+  const { t, ln, nt, ns, ny, lang } = useI18n();
   const { filteredNodes, openDetail, currentEra } = store;
 
   // 按时代分组
@@ -64,7 +64,7 @@ export default memo(function ListView({ store }: ListViewProps) {
                   {ln(era)}
                 </h2>
                 <p className="mt-1 text-[11px] text-muted-foreground">
-                  {era.description}
+                  {lang === 'en-US' ? (era.descriptionEn ?? era.description) : era.description}
                 </p>
               </div>
               <div
@@ -114,7 +114,7 @@ export default memo(function ListView({ store }: ListViewProps) {
                             className="text-[11px] font-medium tabular-nums"
                             style={{ color: civColor }}
                           >
-                            {node.yearDisplay}
+                            {ny(node.yearDisplay)}
                           </span>
                         </div>
                         <CardTitle className="mt-2 text-base font-semibold leading-snug group-hover:text-primary font-serif">
@@ -147,7 +147,7 @@ export default memo(function ListView({ store }: ListViewProps) {
                                 color: currentEra.accent,
                               }}
                             >
-                              重要
+                              {t('badge.important', '重要')}
                             </Badge>
                           )}
                         </div>

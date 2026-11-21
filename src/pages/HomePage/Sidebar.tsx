@@ -50,7 +50,7 @@ interface SidebarProps {
 }
 
 export default memo(function Sidebar({ store }: SidebarProps) {
-  const { t, ln, nt } = useI18n();
+  const { t, ln, nt, ny } = useI18n();
   const isMobile = useIsMobile();
   const {
     sidebarOpen,
@@ -189,8 +189,8 @@ export default memo(function Sidebar({ store }: SidebarProps) {
             <button
               key={era.id}
               onClick={() => handleNarrowEraClick(era.id)}
-              aria-label={`${ln(era)}（${getEraCount(era.id)}个节点）`}
-              title={`${ln(era)} · ${getEraCount(era.id)}个节点`}
+              aria-label={`${ln(era)}（${getEraCount(era.id)} ${t('ui.nodes', '个节点')}）`}
+              title={`${ln(era)} · ${getEraCount(era.id)} ${t('ui.nodes', '个节点')}`}
               className={`group relative flex flex-col items-center justify-center gap-0.5 rounded-md px-1 py-2 transition-colors ${
                 isActive
                   ? 'bg-primary/15 text-foreground'
@@ -208,7 +208,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                 className="text-[11px] font-medium font-serif leading-tight"
                 style={{ writingMode: 'vertical-rl', textOrientation: 'upright' }}
               >
-                {ERA_SHORT_NAMES[era.id] ?? ln(era).slice(0, 2)}
+                {t(`timeline.eraShort_${era.id}`, ERA_SHORT_NAMES[era.id] ?? ln(era).slice(0, 2))}
               </span>
             </button>
           );
@@ -225,7 +225,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
         <div className="flex items-center gap-2 min-w-0">
           <BookOpen className="size-4 shrink-0 text-primary" />
           <span className="text-sm font-semibold text-foreground font-serif truncate">
-            时代目录
+            {t('ui.eraIndex', '时代目录')}
           </span>
         </div>
         <div className="flex items-center gap-1">
@@ -295,7 +295,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                     className="mr-1 inline-block size-1.5 rounded-full align-middle"
                     style={{ backgroundColor: val.color }}
                   />
-                  {val.name}
+                  {ln(val)}
                 </button>
               ))}
             </div>
@@ -314,7 +314,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                   }`}
                 >
                   <span className="mr-1">{val.icon}</span>
-                  {val.name}
+                  {ln(val)}
                 </button>
               ))}
             </div>
@@ -354,7 +354,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                   }}
                   aria-expanded={expanded}
                   aria-controls={`era-group-${era.id}`}
-                  aria-label={`${ln(era)}，${count}个节点，${expanded ? '已展开' : '已收起'}`}
+                  aria-label={`${ln(era)}，${count} ${t('ui.nodes', '个节点')}，${expanded ? t('sidebar.expanded', '已展开') : t('sidebar.collapsed', '已收起')}`}
                 >
                   {expanded ? (
                     <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
@@ -393,7 +393,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                               if (isMobile) setSidebarOpen(false);
                             }}
                             className="flex w-full items-center gap-2 px-2 py-1.5 text-left transition-colors hover:text-foreground"
-                            aria-label={`${nt(node)}，${node.yearDisplay}`}
+                            aria-label={`${nt(node)}，${ny(node.yearDisplay)}`}
                           >
                             <span className="size-1 shrink-0 bg-foreground/25" />
                             <div className="min-w-0 flex-1">
@@ -405,7 +405,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                         ))}
                         {nodes.length > 20 && (
                           <p className="px-2 py-1 text-[10px] text-muted-foreground/60">
-                            还有 {nodes.length - 20} 个节点…
+                            {t('ui.andMore', '还有')} {nodes.length - 20} {t('ui.nodesEllipsis', '个节点…')}
                           </p>
                         )}
                       </>
@@ -429,8 +429,8 @@ export default memo(function Sidebar({ store }: SidebarProps) {
 
       <div className="border-t border-border/40 p-3">
         <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-          <span>共 {dataLoaded ? allNodes.length : meta.totalNodes} 个历史节点</span>
-          <span>{ERAS.length} 个时代</span>
+          <span>{t('ui.total', '共')} {dataLoaded ? allNodes.length : meta.totalNodes} {t('ui.historyNodes', '个历史节点')}</span>
+          <span>{ERAS.length} {t('ui.eras', '个时代')}</span>
         </div>
       </div>
     </div>
@@ -442,7 +442,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
         <SheetContent side="left" className="w-72 p-0">
           <SheetHeader className="sr-only">
-            <SheetTitle>时代目录</SheetTitle>
+            <SheetTitle>{t('ui.eraIndex', '时代目录')}</SheetTitle>
           </SheetHeader>
           <SheetClose className="sr-only" />
           <FullContent />

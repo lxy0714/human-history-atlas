@@ -114,7 +114,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                   letterSpacing: '0.08em',
                 }}
               >
-                {t('nt(loading)', '全球历史全景')}
+                {t('loading.title', '全球历史全景')}
               </div>
               <div
                 className="mt-3 text-sm tracking-[0.3em] md:text-base"

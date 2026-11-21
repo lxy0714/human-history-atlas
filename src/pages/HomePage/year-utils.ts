@@ -1,9 +1,32 @@
-// EXPORTS: yearsAgo, formatYear
-// 纯函数文件：无副作用、无外部运行时依赖，可被 vitest 直接测试
+// EXPORTS: yearsAgo, formatYear, setYearFormatLang, getYearFormatLang
+// 年份格式化：中文口径为纯函数；英文口径由 I18nProvider 在渲染期注入当前语言。
+// 语言状态是模块级的，因为 formatYear 有 100+ 调用点，逐点传 lang 不现实；
+// Provider 在自身 render 体内同步设置，先于所有子组件渲染，故不存在读到旧值的时序。
+// 依赖仅 format-year（其自身只 import 类型），仍可被 vitest 直接测试。
+
+import { formatYearBilingual } from '@/i18n/format-year';
+import type { I18nLang } from '@/i18n/types';
+
+let activeLang: I18nLang = 'zh-CN';
+
+/** 由 I18nProvider 调用，切换年份显示语言。 */
+export function setYearFormatLang(lang: I18nLang): void {
+  activeLang = lang;
+}
+
+/** 读取当前年份显示语言（测试与调试用）。 */
+export function getYearFormatLang(): I18nLang {
+  return activeLang;
+}
 
 export function yearsAgo(year: number): string {
   const now = 2026;
   const diff = now - year;
+  if (activeLang === 'en-US') {
+    if (diff === 0) return 'this year';
+    if (diff > 0) return `about ${diff.toLocaleString('en-US')} years ago`;
+    return `${Math.abs(diff).toLocaleString('en-US')} years in the future`;
+  }
   if (diff === 0) return '今年';
   if (diff > 0) return `距今约 ${diff.toLocaleString()} 年`;
   return `未来 ${Math.abs(diff).toLocaleString()} 年`;
@@ -31,7 +54,14 @@ export interface FormatYearOptions {
 export function formatYear(year: number, options: FormatYearOptions = {}): string {
   const { maxYear = Infinity } = options;
 
-  if (year >= maxYear - 1) return '至今';
+  if (year >= maxYear - 1) return activeLang === 'en-US' ? 'present' : '至今';
+
+  if (activeLang === 'en-US') {
+    // formatYearBilingual 自带「2025+ → present」；上面已按 maxYear 判过至今，
+    // 这里让 2025+ 走常规 CE，避免默认 Infinity 时把 2026 误显示成 present。
+    if (year >= 2025) return `${Math.round(year).toLocaleString('en-US')} CE`;
+    return formatYearBilingual(year, 'en-US');
+  }
 
   const abs = Math.abs(year);
 

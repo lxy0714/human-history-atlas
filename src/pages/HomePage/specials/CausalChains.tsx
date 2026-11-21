@@ -275,7 +275,7 @@ interface CausalChainsProps {
 }
 
 export default function CausalChains({ store }: CausalChainsProps) {
-  const { ln, nt } = useI18n();
+  const { ln, nt, ny } = useI18n();
   const [activeChain, setActiveChain] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const { scrollToNode } = store;
@@ -375,7 +375,7 @@ export default function CausalChains({ store }: CausalChainsProps) {
                     style={{ backgroundColor: chain.color }}
                   />
                   <div className="mb-1 text-[9px] text-muted-foreground">
-                    {nd.yearDisplay}
+                    {ny(nd.yearDisplay)}
                   </div>
                   <div className="line-clamp-2 text-xs font-medium text-foreground">
                     {nt(nd)}

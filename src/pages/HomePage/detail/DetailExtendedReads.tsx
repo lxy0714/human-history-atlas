@@ -26,7 +26,7 @@ export default function DetailExtendedReads({
   civColor,
   onScrollToNode,
 }: DetailExtendedReadsProps) {
-  const { ln, nt } = useI18n();
+  const { ln, nt, ny } = useI18n();
   if (extendedReads.length === 0) return null;
 
   return (
@@ -68,7 +68,7 @@ export default function DetailExtendedReads({
                     style={{ backgroundColor: nc }}
                   />
                   <span className="text-[10px] text-muted-foreground">
-                    {node.yearDisplay}
+                    {ny(node.yearDisplay)}
                   </span>
                 </div>
                 <p className="line-clamp-2 pl-1 text-xs font-medium text-foreground font-serif">

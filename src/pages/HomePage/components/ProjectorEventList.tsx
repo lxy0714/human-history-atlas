@@ -20,7 +20,7 @@ export default function ProjectorEventList({
   onOpenDetail,
   onPause,
 }: ProjectorEventListProps) {
-  const { nt } = useI18n();
+  const { nt, ny } = useI18n();
   const handleClick = (node: IHistoryNodeIndex) => {
     onOpenDetail(node);
     onPause();
@@ -58,7 +58,7 @@ export default function ProjectorEventList({
                           className="shrink-0 text-[10px] font-medium tabular-nums"
                           style={{ color: civColor }}
                         >
-                          {node.yearDisplay}
+                          {ny(node.yearDisplay)}
                         </span>
                         {node.important && <Star className="size-3 fill-current text-amber-500" />}
                       </div>
@@ -96,7 +96,7 @@ export default function ProjectorEventList({
                 className="text-[10px] tabular-nums"
                 style={{ color: civColor }}
               >
-                {node.yearDisplay}
+                {ny(node.yearDisplay)}
               </div>
               <div
                 className="mt-0.5 truncate font-medium"

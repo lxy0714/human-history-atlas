@@ -49,7 +49,7 @@ export default function LayerControlPanel({
   onSelectPeakEmpire,
   onEraJump,
 }: LayerControlPanelProps) {
-  const { ln } = useI18n();
+  const { ln, t } = useI18n();
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
 
@@ -58,7 +58,7 @@ export default function LayerControlPanel({
   const PanelContent = (
     <div className="space-y-3 p-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold font-serif">图层控制</span>
+        <span className="text-xs font-semibold font-serif">{t('map.layerControl', '图层控制')}</span>
         {isMobile && (
           <Button
             variant="ghost"
@@ -78,7 +78,7 @@ export default function LayerControlPanel({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <MapPin className="size-3.5 text-muted-foreground" />
-            <span className="text-xs">历史节点标记</span>
+            <span className="text-xs">{t('map.nodeMarkers', '历史节点标记')}</span>
           </div>
           <Switch checked={showNodes} onCheckedChange={onToggleNodes} />
         </div>
@@ -86,7 +86,7 @@ export default function LayerControlPanel({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Crown className="size-3.5 text-muted-foreground" />
-            <span className="text-xs">帝国疆域图层</span>
+            <span className="text-xs">{t('map.empireLayer', '帝国疆域图层')}</span>
           </div>
           <Switch checked={showEmpires} onCheckedChange={onToggleEmpires} />
         </div>
@@ -94,7 +94,7 @@ export default function LayerControlPanel({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Route className="size-3.5 text-muted-foreground" />
-            <span className="text-xs">历史路线动画</span>
+            <span className="text-xs">{t('map.routeAnim', '历史路线动画')}</span>
           </div>
           <Switch checked={showRoutes} onCheckedChange={onToggleRoutes} />
         </div>
@@ -102,7 +102,7 @@ export default function LayerControlPanel({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Globe className="size-3.5 text-muted-foreground" />
-            <span className="text-xs">文明色彩标识</span>
+            <span className="text-xs">{t('map.civColors', '文明色彩标识')}</span>
           </div>
           <Switch checked={showCivColors} onCheckedChange={onToggleCivColors} />
         </div>
@@ -112,7 +112,7 @@ export default function LayerControlPanel({
 
       {/* 疆域显示模式 */}
       <div className="space-y-2">
-        <span className="text-xs font-semibold">疆域显示模式</span>
+        <span className="text-xs font-semibold">{t('map.territoryMode', '疆域显示模式')}</span>
         <Tabs
           value={empireMode}
           onValueChange={(v) => onEmpireModeChange(v as 'concurrent' | 'peak' | 'off')}
@@ -120,13 +120,13 @@ export default function LayerControlPanel({
         >
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="concurrent" className="text-[11px]">
-              并立年份
+              {t('map.concurrentYear', '并立年份')}
             </TabsTrigger>
             <TabsTrigger value="peak" className="text-[11px]">
-              极盛叠加
+              {t('map.peakOverlay', '极盛叠加')}
             </TabsTrigger>
             <TabsTrigger value="off" className="text-[11px]">
-              关闭
+              {t('map.off', '关闭')}
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -158,7 +158,7 @@ export default function LayerControlPanel({
                           ?.color ?? '#888',
                     }}
                   />
-                  {e.name}
+                  {ln(e)}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -170,7 +170,7 @@ export default function LayerControlPanel({
 
       {/* 时代快进 */}
       <div className="space-y-2">
-        <span className="text-xs font-semibold">时代快进</span>
+        <span className="text-xs font-semibold">{t('map.eraJump', '时代快进')}</span>
         <div className="grid grid-cols-2 gap-1">
           {ERAS.map((era, idx) => (
             <Button
@@ -195,9 +195,9 @@ export default function LayerControlPanel({
       {/* 文明图例 */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold">文明色</span>
+          <span className="text-xs font-semibold">{t('map.civColor', '文明色')}</span>
           <Badge variant="outline" className="text-[10px]">
-            {Object.keys(CIVILIZATIONS).length} 种
+            {Object.keys(CIVILIZATIONS).length} {t('map.kinds', '种')}
           </Badge>
         </div>
         <div className="grid grid-cols-2 gap-1">
@@ -210,7 +210,7 @@ export default function LayerControlPanel({
                   boxShadow: `0 0 3px ${civ.color}80`,
                 }}
               />
-              <span className="text-[10px] text-foreground/70">{civ.name}</span>
+              <span className="text-[10px] text-foreground/70">{ln(civ)}</span>
             </div>
           ))}
         </div>

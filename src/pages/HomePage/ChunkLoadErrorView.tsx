@@ -16,7 +16,7 @@ export default function ChunkLoadErrorView({ error, onRetry }: ChunkLoadErrorVie
           <AlertTriangle className="size-6 text-warning" />
         </div>
         <h2 className="text-h2 font-semibold text-foreground mb-2">
-          {t('nt(chunk)', '页面资源加载失败')}
+          {t('chunk.title', '页面资源加载失败')}
         </h2>
         <p className="text-body text-muted-foreground mb-6">
           {t('chunk.descLine1', 'The app is being updated and some resources are temporarily unavailable. This is normal and usually resolves in a few seconds.')}

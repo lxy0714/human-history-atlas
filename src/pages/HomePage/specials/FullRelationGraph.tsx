@@ -68,7 +68,7 @@ function degreeToSize(degree: number, maxDegree: number): number {
 }
 
 export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphProps) {
-  const { ln, nt, ns } = useI18n();
+  const { ln, nt, ns, ny } = useI18n();
   const isMobile = useIsMobile();
   const chartRef = useRef<ReactECharts | null>(null);
   const [activeTypes, setActiveTypes] = useState<Set<RelationType>>(
@@ -262,7 +262,7 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
             const civName = ln(CIVILIZATIONS[n.civilization], n.civilization);
             return `
               <div style="font-weight:600;font-size:14px;margin-bottom:4px;font-family:serif;">${nt(n)}</div>
-              <div style="color:#c9a96e;font-size:11px;margin-bottom:4px;">${n.yearDisplay} · ${civName}</div>
+              <div style="color:#c9a96e;font-size:11px;margin-bottom:4px;">${ny(n.yearDisplay)} · ${civName}</div>
               <div style="font-size:11px;color:#aaa;margin-bottom:4px;">关联度：${p.data.degree ?? 0}</div>
               <div style="font-size:11px;line-height:1.5;max-width:200px;color:#ddd;">${ns(n)}</div>
               <div style="margin-top:6px;font-size:10px;color:#d4a843;">双击查看详情 →</div>
@@ -354,8 +354,8 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
       (n) =>
         n &&
         (bilingualHaystack(n.title, nt(n)).toLowerCase().includes(q) ||
-          ns(n).toLowerCase().includes(q) ||
-          n.yearDisplay.includes(q)),
+          bilingualHaystack(n.summary, ns(n)).toLowerCase().includes(q) ||
+          bilingualHaystack(n.yearDisplay, ny(n.yearDisplay)).includes(q)),
     ).slice(0, 8);
   }, [debouncedSearch]);
 
@@ -449,7 +449,7 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
                   />
                   <span className="min-w-0 flex-1 truncate font-medium">{nt(n)}</span>
                   <span className="shrink-0 text-[10px] text-muted-foreground">
-                    {n.yearDisplay}
+                    {ny(n.yearDisplay)}
                   </span>
                 </button>
               ))}

@@ -149,7 +149,7 @@ export default function ViewErrorBoundaryI18n(props: Omit<ViewErrorBoundaryProps
   const { t } = useI18n();
   return (
     <ViewErrorBoundary
-      title={props.title ?? t('nt(errorBoundary)', '这里的史料暂时散佚了')}
+      title={props.title ?? t('errorBoundary.title', '这里的史料暂时散佚了')}
       description={props.description ?? t('errorBoundary.desc', '加载过程中出了点小问题，试试重新加载这部分内容。')}
       retryLabel={props.retryLabel ?? t('errorBoundary.retry', '重新加载')}
       goHomeLabel={props.goHomeLabel ?? t('errorBoundary.goHome', '返回首页')}

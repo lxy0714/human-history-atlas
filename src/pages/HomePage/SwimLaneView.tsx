@@ -95,7 +95,7 @@ function NodeTypeDot({ type, color }: { type: string; color: string }) {
 }
 
 export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
-  const { t, ln, nt } = useI18n();
+  const { t, ln, nt, ny } = useI18n();
   const { filteredNodes, openDetail, selectedNode } = store;
   const [hiddenLanes, setHiddenLanes] = useState<CivilizationKey[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -202,7 +202,7 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
             <div className="inline-flex items-center gap-1.5 rounded-lg bg-card p-1 shadow-xs border border-border/50">
               <div className="flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground cursor-pointer">
                 <Layers className="size-3.5" />
-                <span className="hidden sm:inline">{t('nt(swimlane)', '文明泳道')}</span>
+                <span className="hidden sm:inline">{t('swimlane.title', '文明泳道')}</span>
               </div>
             </div>
             <div className="text-xs text-muted-foreground">
@@ -251,7 +251,7 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
                   className="size-1.5 shrink-0 rounded-full"
                   style={{ backgroundColor: civ.color }}
                 />
-                <span className="font-medium">{civ.name}</span>
+                <span className="font-medium">{ln(civ)}</span>
                 <span
                   className="tabular-nums"
                   style={{ fontSize: 10, opacity: 0.6 }}
@@ -307,7 +307,7 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
                       className="text-sm font-bold font-display leading-tight"
                       style={{ color: civ.color }}
                     >
-                      {civ.name}
+                      {ln(civ)}
                     </span>
                     <span
                       className="tabular-nums text-[10px] text-muted-foreground"
@@ -472,7 +472,7 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
                                         className="tabular-nums text-[10px] font-medium leading-tight opacity-85"
                                         style={{ color: civ.color }}
                                       >
-                                        {node.yearDisplay}
+                                        {ny(node.yearDisplay)}
                                       </div>
                                       <div
                                         className="line-clamp-2 text-[12px] font-medium leading-snug text-foreground"

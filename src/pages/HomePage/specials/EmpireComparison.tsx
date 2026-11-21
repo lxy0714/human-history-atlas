@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EMPIRE_DATA, type EmpireRecord } from '@/data/empire-comparison';
+import { useI18n } from '@/i18n';
 
 interface EmpireComparisonProps {
   onBack?: () => void;
@@ -19,6 +20,7 @@ const TAB_CONFIG: Record<TabType, { label: string; unit: string; key: keyof Empi
 };
 
 export default function EmpireComparison({ onBack }: EmpireComparisonProps) {
+  const { ln, t } = useI18n();
   const [tab, setTab] = useState<TabType>('area');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
@@ -121,7 +123,7 @@ export default function EmpireComparison({ onBack }: EmpireComparisonProps) {
                         className="size-3 rounded-full shrink-0"
                         style={{ backgroundColor: empire.color }}
                       />
-                      <span className="font-medium flex-1">{empire.name}</span>
+                      <span className="font-medium flex-1">{ln(empire)}</span>
                       <span className="text-sm font-semibold tabular-nums">
                         {value.toLocaleString()}
                         {config.suffix}

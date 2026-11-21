@@ -6,6 +6,7 @@
 export const enUS = {
   // ===== 通用 =====
   common: {
+    fullscreen: 'Fullscreen',
     loading: 'Loading...',
     error: 'Error',
     back: 'Back',
@@ -27,6 +28,7 @@ export const enUS = {
 
   // ===== 导航 =====
   nav: {
+    viewSwitch: 'Switch view',
     timeline: 'Timeline',
     map: 'World Map',
     list: 'Encyclopedia',
@@ -111,6 +113,10 @@ export const enUS = {
 
   // ===== 视图 =====
   view: {
+    timeline: 'Timeline',
+    map: 'World Map',
+    list: 'Encyclopedia',
+    special: 'Special Hall',
     density: 'Density',
     comfortable: 'Comfortable',
     compact: 'Compact',
@@ -125,6 +131,22 @@ export const enUS = {
 
   // ===== 地图视图 =====
   map: {
+    off: 'Off',
+    geoMarkers: 'geo markers',
+    layerControl: 'Layer control',
+    nodeMarkers: 'Historical node markers',
+    empireLayer: 'Empire territory layer',
+    routeAnim: 'Historical route animation',
+    civColors: 'Civilization colour coding',
+    territoryMode: 'Territory display mode',
+    concurrentYear: 'Concurrent by year',
+    peakOverlay: 'Peak overlay',
+    eraJump: 'Jump to era',
+    civColor: 'Civilization colours',
+    kinds: 'kinds',
+    capital: 'Capital',
+    capitalOf: 'Capital of',
+    concurrentEmpires: 'Concurrent empires',
     legend: 'Civilization Legend',
     legendShort: 'Legend',
     routes: 'Routes',
@@ -419,6 +441,26 @@ export const enUS = {
   },
 
   // ===== 徽章与标签 =====
+  // ===== 通用零散 UI =====
+  ui: {
+    total: 'Total',
+    nodes: 'nodes',
+    historyNodes: 'historical nodes',
+    eras: 'eras',
+    andMore: 'And',
+    nodesEllipsis: 'more nodes…',
+    eraIndex: 'Era index',
+    comfortable: 'Comfortable',
+    compact: 'Compact',
+    expandArrow: 'Expand →',
+    legendHint: 'Click a legend entry to show or hide its curve',
+    riseFall: 'Civilization rise & fall',
+    play: 'Play',
+    filters: 'Filters',
+    playing: 'Playing',
+    artifactBuilding: 'Artifact / Building',
+  },
+
   badge: {
     typePerson: 'Figure',
     typeEvent: 'Event',

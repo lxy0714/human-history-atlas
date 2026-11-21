@@ -66,7 +66,7 @@ export default memo(function HistoryProjector({
   onOpenDetail,
   initialCivilization,
 }: HistoryProjectorProps) {
-  const { t, ln, nt, lang } = useI18n();
+  const { t, ln, nt, lang, ny } = useI18n();
   const isMobile = useIsMobile();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -308,7 +308,7 @@ export default memo(function HistoryProjector({
 
         poly.bindTooltip(
           `<div style="font-size:12px;line-height:1.4;min-width:140px;">
-            <div style="font-weight:600;color:${color};margin-bottom:2px;">${empire.name}</div>
+            <div style="font-weight:600;color:${color};margin-bottom:2px;">${ln(empire)}</div>
             <div style="color:#c9a96e;font-size:11px;">${formatYear(empire.startYear)} — ${formatYear(empire.endYear)}</div>
           </div>`,
           { direction: 'top', offset: [0, -6], opacity: 0.9 },
@@ -379,7 +379,7 @@ export default memo(function HistoryProjector({
       marker.bindTooltip(
         `<div style="font-size:11px;line-height:1.3;">
           <div style="font-weight:600;margin-bottom:1px;">${nt(node)}</div>
-          <div style="color:#c9a96e;font-size:10px;">${node.yearDisplay}</div>
+          <div style="color:#c9a96e;font-size:10px;">${ny(node.yearDisplay)}</div>
         </div>`,
         { direction: 'top', offset: [0, -6], opacity: 0.85 },
       );
@@ -587,7 +587,7 @@ export default memo(function HistoryProjector({
       ref={projectorRef}
       role="dialog"
       aria-modal="true"
-      aria-label={t('nt(projector)', '历史放映机')}
+      aria-label={t('projector.title', '历史放映机')}
       className="fixed inset-0 z-[9999] bg-background"
       style={{ pointerEvents: 'auto' }}
     >

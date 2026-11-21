@@ -40,7 +40,7 @@ const INTRO_WORDS = [
 ];
 
 export default function TodayInHistory({ store, onBack }: TodayInHistoryProps) {
-  const { nt, ns } = useI18n();
+  const { nt, ns, ny } = useI18n();
   const today = new Date();
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [day, setDay] = useState(today.getDate());
@@ -193,7 +193,7 @@ export default function TodayInHistory({ store, onBack }: TodayInHistoryProps) {
                     className="shrink-0 text-[10px]"
                     style={{ borderColor: era?.accent, color: era?.accent }}
                   >
-                    {node.yearDisplay}
+                    {ny(node.yearDisplay)}
                   </Badge>
                   <div className="min-w-0 flex-1">
                     <h4 className="truncate text-sm font-semibold">{nt(node)}</h4>

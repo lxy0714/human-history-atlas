@@ -164,7 +164,7 @@ interface LineageHallProps {
 }
 
 export default function LineageHall({ store }: LineageHallProps) {
-  const { nt } = useI18n();
+  const { nt, ny } = useI18n();
   const [activeTab, setActiveTab] = useState('philosophy');
   const isMobile = useIsMobile();
   const { scrollToNode } = store;
@@ -246,7 +246,7 @@ export default function LineageHall({ store }: LineageHallProps) {
                                 {smartTrim(nt(nd), 5)}
                               </div>
                               <div className="text-[9px] text-muted-foreground">
-                                {nd.yearDisplay}
+                                {ny(nd.yearDisplay)}
                               </div>
                             </motion.button>
 

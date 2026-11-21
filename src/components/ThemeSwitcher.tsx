@@ -235,7 +235,7 @@ export default function ThemeSwitcher() {
             }}
             className="z-[200] overflow-hidden rounded-lg border border-border/50 bg-card shadow-lg"
           >
-            <div className="px-3 py-2 text-xs text-muted-foreground">{t('nt(theme)', '选择主题')}</div>
+            <div className="px-3 py-2 text-xs text-muted-foreground">{t('theme.title', '选择主题')}</div>
             <div className="flex flex-col pb-1">
               {THEMES.map((t, i) => {
   
@@ -291,7 +291,7 @@ export default function ThemeSwitcher() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         onKeyDown={onTriggerKeyDown}
-        aria-label={`${t('nt(theme)', '主题')} · ${current.name}`}
+        aria-label={`${t('theme.title', '主题')} · ${current.name}`}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={PANEL_ID}
@@ -303,7 +303,7 @@ export default function ThemeSwitcher() {
         )}
       >
         <Palette className="h-4 w-4 shrink-0 text-primary md:h-3.5 md:w-3.5" />
-        <span className="hidden whitespace-nowrap sm:inline">{t('nt(theme)', '主题')} · {getThemeName(currentId)}</span>
+        <span className="hidden whitespace-nowrap sm:inline">{t('theme.title', '主题')} · {getThemeName(currentId)}</span>
         <ChevronDown
           className={cn('h-3 w-3 shrink-0 transition-transform', open && 'rotate-180')}
         />

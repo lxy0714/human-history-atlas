@@ -42,7 +42,7 @@ interface NodePickerProps {
 }
 
 function NodePicker({ label, value, onChange, color, disabledId }: NodePickerProps) {
-  const { t, ln, nt, ns } = useI18n();
+  const { t, ln, nt, ns, ny } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, 180);
@@ -63,8 +63,8 @@ function NodePicker({ label, value, onChange, color, disabledId }: NodePickerPro
       // 搜索
       if (q) {
         const matchTitle = bilingualHaystack(n.title, nt(n)).toLowerCase().includes(q);
-        const matchYear = n.yearDisplay.includes(q);
-        const matchSummary = ns(n).toLowerCase().includes(q);
+        const matchYear = bilingualHaystack(n.yearDisplay, ny(n.yearDisplay)).includes(q);
+        const matchSummary = bilingualHaystack(n.summary, ns(n)).toLowerCase().includes(q);
         if (!matchTitle && !matchYear && !matchSummary) return false;
       }
       // 时代筛选
@@ -287,7 +287,7 @@ function NodePicker({ label, value, onChange, color, disabledId }: NodePickerPro
                               </span>
                             </div>
                             <div className="truncate text-[10px] text-muted-foreground">
-                              {node.yearDisplay} · {ln(CIVILIZATIONS[node.civilization])}
+                              {ny(node.yearDisplay)} · {ln(CIVILIZATIONS[node.civilization])}
                             </div>
                           </div>
                           {isSelected && (
@@ -332,7 +332,7 @@ function NodePicker({ label, value, onChange, color, disabledId }: NodePickerPro
             <div className="min-w-0 flex-1">
               <div className="truncate text-sm font-medium font-serif">{nt(value)}</div>
               <div className="truncate text-[10px] text-muted-foreground">
-                {ln(valueEra)} · {value.yearDisplay} · {ln(CIVILIZATIONS[value.civilization])}
+                {ln(valueEra)} · {ny(value.yearDisplay)} · {ln(CIVILIZATIONS[value.civilization])}
               </div>
             </div>
             <button
@@ -499,7 +499,7 @@ interface CivilizationCompareProps {
 }
 
 export default function CivilizationCompare({ store, initialLeftId }: CivilizationCompareProps) {
-  const { nt, ns } = useI18n();
+  const { nt, ns, ny } = useI18n();
   const [leftNode, setLeftNode] = useState<IHistoryNodeIndex | null>(
     initialLeftId ? ALL_HISTORY_NODES_INDEX.find((n) => n && n.id === initialLeftId) ?? null : null,
   );
@@ -699,7 +699,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                 <div className="space-y-1.5 text-xs">
                   <div className="flex items-start gap-2">
                     <Clock className="mt-0.5 size-3 shrink-0 text-muted-foreground" />
-                    <span>{leftNode!.yearDisplay}</span>
+                    <span>{ny(leftNode!.yearDisplay)}</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <MapPin className="mt-0.5 size-3 shrink-0 text-muted-foreground" />
@@ -720,7 +720,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                 <div className="space-y-1.5 text-xs">
                   <div className="flex items-start gap-2">
                     <Clock className="mt-0.5 size-3 shrink-0 text-muted-foreground" />
-                    <span>{rightNode!.yearDisplay}</span>
+                    <span>{ny(rightNode!.yearDisplay)}</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <MapPin className="mt-0.5 size-3 shrink-0 text-muted-foreground" />

@@ -43,12 +43,14 @@ interface MapViewProps {
 const BASEMAPS = {
   satellite: {
     name: '卫星影像',
+    nameEn: 'Satellite',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attribution:
       'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
   },
   dark: {
     name: '深色街道',
+    nameEn: 'Dark streets',
     url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
     attribution: '© OpenStreetMap contributors © CARTO',
   },
@@ -83,7 +85,7 @@ function createDivIcon(color: string, important: boolean) {
 }
 
 export default memo(function MapView({ store }: MapViewProps) {
-  const { t, ln, nt, ns } = useI18n();
+  const { t, ln, nt, ns, ny } = useI18n();
   const {
     filteredNodes,
     openDetail,
@@ -261,7 +263,7 @@ export default memo(function MapView({ store }: MapViewProps) {
           marker.bindTooltip(
             `<div style="font-size: 12px; line-height: 1.4;">
               <div style="font-weight: 600; margin-bottom: 2px;">${nt(node)}</div>
-              <div style="color: #c9a96e; font-size: 11px;">${node.yearDisplay}</div>
+              <div style="color: #c9a96e; font-size: 11px;">${ny(node.yearDisplay)}</div>
             </div>`,
             {
               direction: 'top',
@@ -294,7 +296,7 @@ export default memo(function MapView({ store }: MapViewProps) {
               <div style="font-weight: 600; margin-bottom: 4px; color: ${group.primaryColor};">
                 ${group.count} ${t('map.nodesHere', '个历史节点在此处')}
               </div>
-              ${preview.map((n) => `<div style="color: #e8dcc4;">· ${nt(n)} <span style="color: #c9a96e; font-size: 10px;">(${n.yearDisplay})</span></div>`).join('')}
+              ${preview.map((n) => `<div style="color: #e8dcc4;">· ${nt(n)} <span style="color: #c9a96e; font-size: 10px;">(${ny(n.yearDisplay)})</span></div>`).join('')}
               ${more > 0 ? `<div style="color: #888; margin-top: 2px; font-size: 11px;">${t('map.moreNodes', '还有').replace('{n}', String(more))}...</div>` : ''}
               <div style="color: #c9a96e; font-size: 10px; margin-top: 4px;">${t('map.clickToList', '点击查看完整列表')}</div>
             </div>
@@ -495,7 +497,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                               boxShadow: `0 0 4px ${civ.color}80`,
                             }}
                           />
-                          <span className="text-[11px] text-foreground/80">{civ.name}</span>
+                          <span className="text-[11px] text-foreground/80">{ln(civ)}</span>
                         </div>
                       ))}
                     </div>
@@ -549,7 +551,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                               boxShadow: `0 0 4px ${civ.color}80`,
                             }}
                           />
-                          <span className="text-sm">{civ.name}</span>
+                          <span className="text-sm">{ln(civ)}</span>
                         </div>
                       ))}
                     </div>
@@ -561,7 +563,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                         {catList.map(([key, cat]) => (
                           <div key={key} className="flex items-center gap-2">
                             <span className="size-3 text-sm">{cat.icon}</span>
-                            <span className="text-sm text-foreground/80">{cat.name}</span>
+                            <span className="text-sm text-foreground/80">{ln(cat)}</span>
                           </div>
                         ))}
                       </div>
@@ -587,7 +589,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              {BASEMAPS[key].name}
+              {ln(BASEMAPS[key])}
             </Button>
           ))}
           <div className="mx-1 w-px bg-border/40" />
@@ -673,7 +675,7 @@ export default memo(function MapView({ store }: MapViewProps) {
           }}
         >
           <MapPin className="mr-1 size-3" />
-          {filteredNodes.filter((n) => n && n.location?.lat !== undefined).length} 个地理标记
+          {filteredNodes.filter((n) => n && n.location?.lat !== undefined).length} {t('map.geoMarkers', '个地理标记')}
         </Badge>
       </div>
 
@@ -717,7 +719,7 @@ export default memo(function MapView({ store }: MapViewProps) {
 
               <h3 className="text-base font-bold font-serif">{nt(popupNode)}</h3>
               <p className="mb-3 text-xs text-muted-foreground">
-                {popupNode.yearDisplay}
+                {ny(popupNode.yearDisplay)}
               </p>
               <p className="mb-4 line-clamp-3 text-sm text-foreground/80">
                 {ns(popupNode)}
@@ -734,7 +736,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                         key={cat}
                         className="rounded-sm bg-muted/50 px-1.5 py-0.5 text-[10px] text-muted-foreground"
                       >
-                        {catInfo.icon} {catInfo.name}
+                        {catInfo.icon} {ln(catInfo)}
                       </span>
                     );
                   })}
@@ -813,7 +815,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                               {nt(node)}
                             </div>
                             <div className="text-[11px] text-muted-foreground">
-                              {node.yearDisplay} · {ln(CIVILIZATIONS[node.civilization], node.civilization)}
+                              {ny(node.yearDisplay)} · {ln(CIVILIZATIONS[node.civilization], node.civilization)}
                             </div>
                           </div>
                         </button>
@@ -850,7 +852,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                 size="icon"
                 className="h-7 w-7"
                 onClick={() => setClusterPopup(null)}
-                aria-label="关闭"
+                aria-label={t('common.close', '关闭')}
               >
                 <X className="size-3.5" />
               </Button>
@@ -881,7 +883,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                             {nt(node)}
                           </div>
                           <div className="text-[11px] text-muted-foreground">
-                            {node.yearDisplay} · {ln(CIVILIZATIONS[node.civilization], node.civilization)}
+                            {ny(node.yearDisplay)} · {ln(CIVILIZATIONS[node.civilization], node.civilization)}
                           </div>
                         </div>
                       </button>

@@ -92,7 +92,7 @@ function SearchBox({
   onSelectResult,
   onToggleFullText,
 }: SearchBoxProps) {
-  const { t, nt, ns } = useI18n();
+  const { t, nt, ns, ny } = useI18n();
   return (
     <div ref={mobile ? undefined : searchRef} className="relative w-full">
       <div className="relative">
@@ -154,7 +154,7 @@ function SearchBox({
                       {nt(node)}
                     </span>
                     <span className="shrink-0 text-xs text-muted-foreground">
-                      {node.yearDisplay}
+                      {ny(node.yearDisplay)}
                     </span>
                   </div>
                   <p className="line-clamp-1 text-xs text-muted-foreground">
@@ -183,7 +183,7 @@ interface HeaderProps {
 }
 
 export default memo(function Header({ store }: HeaderProps) {
-  const { t, lang } = useI18n();
+  const { t, lang, ln } = useI18n();
   const [searchFocused, setSearchFocused] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -434,7 +434,7 @@ export default memo(function Header({ store }: HeaderProps) {
                 aria-label="筛选"
               >
                 <Filter className="size-4" />
-                <span className="hidden text-xs md:inline">筛选</span>
+                <span className="hidden text-xs md:inline">{t('ui.filters', '筛选')}</span>
                 {activeFilterCount > 0 && (
                   <span className="ml-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
                     {activeFilterCount}
@@ -475,7 +475,7 @@ export default memo(function Header({ store }: HeaderProps) {
                           }
                           onClick={() => toggleCivilization(key)}
                         >
-                          {civ.name}
+                          {ln(civ)}
                         </Badge>
                       );
                     })}
@@ -495,14 +495,14 @@ export default memo(function Header({ store }: HeaderProps) {
                           onClick={() => toggleCategory(key)}
                         >
                           <span className="mr-0.5">{cat.icon}</span>
-                          {cat.name}
+                          {ln(cat)}
                         </Badge>
                       );
                     })}
                   </div>
                 </div>
                 <div className="text-[10px] text-muted-foreground">
-                  共 {store.dataLoaded ? store.allNodes.length : store.meta.totalNodes} 个历史节点 · {store.meta.totalEras} 个时代
+                  {t('ui.total', '共')} {store.dataLoaded ? store.allNodes.length : store.meta.totalNodes} {t('ui.historyNodes', '个历史节点')} · {store.meta.totalEras} {t('ui.eras', '个时代')}
                 </div>
               </div>
             </PopoverContent>
@@ -686,7 +686,7 @@ export default memo(function Header({ store }: HeaderProps) {
                   <Play className="size-4" />
                 )}
                 <span className="hidden text-xs md:inline">
-                  {isPlaying ? '播放中' : '播放'}
+                  {isPlaying ? t('ui.playing', '播放中') : t('ui.play', '播放')}
                 </span>
               </Button>
             </PopoverTrigger>

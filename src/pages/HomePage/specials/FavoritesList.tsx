@@ -13,7 +13,7 @@ interface FavoritesListProps {
 }
 
 export default function FavoritesList({ store, onBack }: FavoritesListProps) {
-  const { ln, nt, ns } = useI18n();
+  const { ln, nt, ns, ny } = useI18n();
   const { favoriteIds, toggleFavorite, scrollToNode } = store;
 
   const favoriteNodes = HISTORY_NODES_INDEX.filter(
@@ -112,7 +112,7 @@ export default function FavoritesList({ store, onBack }: FavoritesListProps) {
                       )}
                     </div>
                     <p className="mb-2 text-xs font-medium text-muted-foreground font-serif">
-                      {node.yearDisplay}
+                      {ny(node.yearDisplay)}
                     </p>
                     <p className="line-clamp-2 text-xs leading-relaxed text-foreground/70">
                       {ns(node)}

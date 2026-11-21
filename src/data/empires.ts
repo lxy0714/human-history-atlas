@@ -5,6 +5,7 @@ import type { CivilizationKey } from './history';
 
 export interface EmpireCapital {
   name: string;
+  nameEn?: string;
   lat: number;
   lng: number;
 }
@@ -12,6 +13,7 @@ export interface EmpireCapital {
 export interface IEmpire {
   id: string;
   name: string; // 中文名
+  nameEn?: string; // 英文名
   civilization: CivilizationKey; // 对应文明色
   startYear: number; // 起（公元前用负数）
   endYear: number; // 讫
@@ -29,11 +31,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-egypt-new',
     name: '古埃及新王国',
+    nameEn: 'New Kingdom of Egypt',
     civilization: 'africa',
     startYear: -1550,
     endYear: -1070,
     peakYear: -1279,
-    capital: { name: '底比斯', lat: 25.7, lng: 32.6 },
+    capital: { name: '底比斯', nameEn: 'Thebes', lat: 25.7, lng: 32.6 },
     brief: '图特摩斯三世至拉美西斯二世时期，地跨西亚北非，版图达埃及历史巅峰。',
     relatedNodeIds: ['sumer'],
     polygons: [
@@ -49,11 +52,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-akkad-babylon',
     name: '阿卡德·古巴比伦',
+    nameEn: 'Akkad & Old Babylon',
     civilization: 'middleEast',
     startYear: -2334,
     endYear: -1595,
     peakYear: -1750,
-    capital: { name: '巴比伦', lat: 32.5, lng: 44.4 },
+    capital: { name: '巴比伦', nameEn: 'Babylon', lat: 32.5, lng: 44.4 },
     brief: '两河流域首个统一帝国，汉谟拉比时期臻于鼎盛，颁布最早成文法典。',
     relatedNodeIds: ['sumer-dawn', 'artifact-hammurabi'],
     polygons: [
@@ -67,11 +71,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-assyria',
     name: '亚述帝国',
+    nameEn: 'Assyrian Empire',
     civilization: 'middleEast',
     startYear: -911,
     endYear: -612,
     peakYear: -669,
-    capital: { name: '尼尼微', lat: 36.3, lng: 43.1 },
+    capital: { name: '尼尼微', nameEn: 'Nineveh', lat: 36.3, lng: 43.1 },
     brief: '古代西亚军事强国，亚述巴尼拔时期疆域从埃及延伸至波斯湾。',
     relatedNodeIds: ['assyrian-empire'],
     polygons: [
@@ -86,11 +91,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-achaemenid',
     name: '阿契美尼德波斯',
+    nameEn: 'Achaemenid Persia',
     civilization: 'middleEast',
     startYear: -550,
     endYear: -330,
     peakYear: -500,
-    capital: { name: '波斯波利斯', lat: 29.9, lng: 52.9 },
+    capital: { name: '波斯波利斯', nameEn: 'Persepolis', lat: 29.9, lng: 52.9 },
     brief: '居鲁士大帝建立，大流士一世时横跨欧亚非三大洲，世界史上首个世界性帝国。',
     relatedNodeIds: ['persian-empire'],
     polygons: [
@@ -106,11 +112,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-alexander',
     name: '亚历山大帝国',
+    nameEn: 'Empire of Alexander',
     civilization: 'europe',
     startYear: -336,
     endYear: -323,
     peakYear: -326,
-    capital: { name: '巴比伦', lat: 32.5, lng: 44.4 },
+    capital: { name: '巴比伦', nameEn: 'Babylon', lat: 32.5, lng: 44.4 },
     brief: '亚历山大东征十年间建立的横跨欧亚非的庞大帝国，从希腊延伸至印度河。',
     relatedNodeIds: ['alexander-empire'],
     polygons: [
@@ -126,11 +133,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-maurya',
     name: '孔雀王朝',
+    nameEn: 'Maurya Empire',
     civilization: 'southAsia',
     startYear: -322,
     endYear: -185,
     peakYear: -265,
-    capital: { name: '华氏城', lat: 25.6, lng: 85.1 },
+    capital: { name: '华氏城', nameEn: 'Pataliputra', lat: 25.6, lng: 85.1 },
     brief: '阿育王时期基本统一印度次大陆，推崇佛教并向外传播。',
     relatedNodeIds: ['maurya-empire', 'person-ashoka'],
     polygons: [
@@ -146,11 +154,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-qin',
     name: '秦朝',
+    nameEn: 'Qin Dynasty',
     civilization: 'china',
     startYear: -221,
     endYear: -207,
     peakYear: -221,
-    capital: { name: '咸阳', lat: 34.3, lng: 108.7 },
+    capital: { name: '咸阳', nameEn: 'Xianyang', lat: 34.3, lng: 108.7 },
     brief: '秦始皇统一六国，建立中国历史上第一个中央集权大一统王朝。',
     relatedNodeIds: ['qin-unification', 'person-qinshihuang'],
     polygons: [
@@ -165,11 +174,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-western-han',
     name: '西汉',
+    nameEn: 'Western Han',
     civilization: 'china',
     startYear: -202,
     endYear: 8,
     peakYear: -100,
-    capital: { name: '长安', lat: 34.3, lng: 108.9 },
+    capital: { name: '长安', nameEn: 'Chang’an', lat: 34.3, lng: 108.9 },
     brief: '汉武帝时期北击匈奴、通西域，版图扩至西域都护府，丝绸之路开通。',
     relatedNodeIds: ['china-liu-bang', 'china-han-wudi', 'econ-silk-road'],
     polygons: [
@@ -185,11 +195,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-roman',
     name: '罗马帝国',
+    nameEn: 'Roman Empire',
     civilization: 'europe',
     startYear: -27,
     endYear: 395,
     peakYear: 117,
-    capital: { name: '罗马', lat: 41.9, lng: 12.5 },
+    capital: { name: '罗马', nameEn: 'Rome', lat: 41.9, lng: 12.5 },
     brief: '图拉真时期疆域达极盛，环绕地中海，地跨欧亚非三洲。',
     relatedNodeIds: ['roman-republic', 'roman-empire'],
     polygons: [
@@ -212,11 +223,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-eastern-han',
     name: '东汉',
+    nameEn: 'Eastern Han',
     civilization: 'china',
     startYear: 25,
     endYear: 220,
     peakYear: 100,
-    capital: { name: '洛阳', lat: 34.6, lng: 112.4 },
+    capital: { name: '洛阳', nameEn: 'Luoyang', lat: 34.6, lng: 112.4 },
     brief: '光武中兴，班超再通西域，疆域延续西汉规模，文化科技繁荣。',
     relatedNodeIds: ['event-guangwu-zhongxing', 'person-ban-chao', 'econ-silk-road'],
     polygons: [
@@ -232,11 +244,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-kushan',
     name: '贵霜帝国',
+    nameEn: 'Kushan Empire',
     civilization: 'southAsia',
     startYear: 30,
     endYear: 375,
     peakYear: 127,
-    capital: { name: '白沙瓦', lat: 34.0, lng: 71.6 },
+    capital: { name: '白沙瓦', nameEn: 'Peshawar', lat: 34.0, lng: 71.6 },
     brief: '迦腻色迦时期横跨中亚与北印度，丝绸之路枢纽，佛教犍陀罗艺术中心。',
     relatedNodeIds: ['kushan-empire'],
     polygons: [
@@ -251,11 +264,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-parthia',
     name: '安息帕提亚',
+    nameEn: 'Parthia (Arsacid)',
     civilization: 'middleEast',
     startYear: -247,
     endYear: 224,
     peakYear: 95,
-    capital: { name: '泰西封', lat: 33.1, lng: 45.6 },
+    capital: { name: '泰西封', nameEn: 'Ctesiphon', lat: 33.1, lng: 45.6 },
     brief: '帕提亚王国长期与罗马帝国对峙，控制两河流域与伊朗高原，是丝绸之路西段枢纽。',
     relatedNodeIds: ['event-parthia-empire'],
     polygons: [
@@ -273,11 +287,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-byzantine',
     name: '拜占庭帝国',
+    nameEn: 'Byzantine Empire',
     civilization: 'europe',
     startYear: 395,
     endYear: 1453,
     peakYear: 555,
-    capital: { name: '君士坦丁堡', lat: 41.0, lng: 29.0 },
+    capital: { name: '君士坦丁堡', nameEn: 'Constantinople', lat: 41.0, lng: 29.0 },
     brief: '查士丁尼大帝时期收复意大利大部与北非，地中海几乎再度成为内湖。',
     relatedNodeIds: ['rome-justinian-reconquest'],
     polygons: [
@@ -293,11 +308,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-sassanid',
     name: '萨珊波斯',
+    nameEn: 'Sasanian Persia',
     civilization: 'middleEast',
     startYear: 224,
     endYear: 651,
     peakYear: 620,
-    capital: { name: '泰西封', lat: 33.1, lng: 45.6 },
+    capital: { name: '泰西封', nameEn: 'Ctesiphon', lat: 33.1, lng: 45.6 },
     brief: '萨珊王朝是波斯第二帝国，与拜占庭长期争霸，疆域从美索不达米亚延伸至中亚。',
     relatedNodeIds: ['kushan-empire'],
     polygons: [
@@ -313,11 +329,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-tang',
     name: '唐朝',
+    nameEn: 'Tang Dynasty',
     civilization: 'china',
     startYear: 618,
     endYear: 907,
     peakYear: 669,
-    capital: { name: '长安', lat: 34.3, lng: 108.9 },
+    capital: { name: '长安', nameEn: 'Chang’an', lat: 34.3, lng: 108.9 },
     brief: '唐高宗时期疆域达极盛，东至朝鲜、西达中亚咸海，设安西、北庭都护府。',
     relatedNodeIds: ['tang-dynasty', 'event-zhenguan', 'an-shi-rebellion'],
     polygons: [
@@ -334,11 +351,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-umayyad',
     name: '阿拉伯帝国（倭马亚）',
+    nameEn: 'Umayyad Caliphate',
     civilization: 'middleEast',
     startYear: 661,
     endYear: 750,
     peakYear: 730,
-    capital: { name: '大马士革', lat: 33.5, lng: 36.3 },
+    capital: { name: '大马士革', nameEn: 'Damascus', lat: 33.5, lng: 36.3 },
     brief: '倭马亚王朝疆域横跨欧亚非三大洲，西起伊比利亚、东至中亚，是历史上最大的帝国之一。',
     relatedNodeIds: ['islamic-conquest'],
     polygons: [
@@ -363,11 +381,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-carolingian',
     name: '查理曼帝国',
+    nameEn: 'Carolingian Empire',
     civilization: 'europe',
     startYear: 768,
     endYear: 888,
     peakYear: 814,
-    capital: { name: '亚琛', lat: 50.8, lng: 6.1 },
+    capital: { name: '亚琛', nameEn: 'Aachen', lat: 50.8, lng: 6.1 },
     brief: '查理曼大帝统一西欧大部，800年加冕为罗马人的皇帝，奠定法德意三国基础。',
     relatedNodeIds: ['carolingian-empire', 'person-charlemagne'],
     polygons: [
@@ -382,11 +401,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-song',
     name: '宋朝（两宋）',
+    nameEn: 'Song Dynasty',
     civilization: 'china',
     startYear: 960,
     endYear: 1279,
     peakYear: 1100,
-    capital: { name: '开封/临安', lat: 34.8, lng: 114.3 },
+    capital: { name: '开封/临安', nameEn: 'Kaifeng / Lin’an', lat: 34.8, lng: 114.3 },
     brief: '两宋经济文化高度发达，商业与科技领先世界，疆域以中原和江南为核心。',
     relatedNodeIds: ['song-dynasty'],
     polygons: [
@@ -401,11 +421,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-abbasid',
     name: '阿拔斯哈里发国',
+    nameEn: 'Abbasid Caliphate',
     civilization: 'middleEast',
     startYear: 750,
     endYear: 1258,
     peakYear: 850,
-    capital: { name: '巴格达', lat: 33.3, lng: 44.4 },
+    capital: { name: '巴格达', nameEn: 'Baghdad', lat: 33.3, lng: 44.4 },
     brief: '阿拔斯王朝是伊斯兰黄金时代的核心，巴格达是当时世界最大城市之一，学术翻译与科学繁荣。',
     relatedNodeIds: ['abbasid-baghdad', 'islamic-conquest'],
     polygons: [
@@ -420,11 +441,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-mongol',
     name: '蒙古帝国',
+    nameEn: 'Mongol Empire',
     civilization: 'centralAsia',
     startYear: 1206,
     endYear: 1368,
     peakYear: 1279,
-    capital: { name: '哈拉和林', lat: 47.3, lng: 102.7 },
+    capital: { name: '哈拉和林', nameEn: 'Karakorum', lat: 47.3, lng: 102.7 },
     brief: '人类历史上疆域最大的陆上帝国，从东海延伸至多瑙河畔，四大汗国横跨欧亚。',
     relatedNodeIds: ['mongol-empire'],
     polygons: [
@@ -442,11 +464,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-yuan',
     name: '元朝',
+    nameEn: 'Yuan Dynasty',
     civilization: 'china',
     startYear: 1271,
     endYear: 1368,
     peakYear: 1330,
-    capital: { name: '大都', lat: 39.9, lng: 116.4 },
+    capital: { name: '大都', nameEn: 'Dadu (Khanbaliq)', lat: 39.9, lng: 116.4 },
     brief: '忽必烈建立元朝，统一中国，行省制度影响深远，海陆贸易繁荣。',
     relatedNodeIds: ['yuan-dynasty'],
     polygons: [
@@ -462,11 +485,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-ming',
     name: '明朝',
+    nameEn: 'Ming Dynasty',
     civilization: 'china',
     startYear: 1368,
     endYear: 1644,
     peakYear: 1424,
-    capital: { name: '北京', lat: 39.9, lng: 116.4 },
+    capital: { name: '北京', nameEn: 'Beijing', lat: 39.9, lng: 116.4 },
     brief: '永乐时期疆域达盛，郑和下西洋扬威海外，长城与紫禁城奠定后世格局。',
     relatedNodeIds: ['event-jingnan-move-capital', 'event-zhenghe'],
     polygons: [
@@ -481,11 +505,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-ottoman',
     name: '奥斯曼帝国',
+    nameEn: 'Ottoman Empire',
     civilization: 'middleEast',
     startYear: 1299,
     endYear: 1922,
     peakYear: 1566,
-    capital: { name: '伊斯坦布尔', lat: 41.0, lng: 29.0 },
+    capital: { name: '伊斯坦布尔', nameEn: 'Istanbul', lat: 41.0, lng: 29.0 },
     brief: '苏莱曼大帝时期地跨欧亚非三洲，控制地中海东部与黑海通道。',
     relatedNodeIds: ['ottoman-empire', 'constantinople-fall'],
     polygons: [
@@ -507,11 +532,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-safavid',
     name: '萨法维波斯',
+    nameEn: 'Safavid Persia',
     civilization: 'middleEast',
     startYear: 1501,
     endYear: 1736,
     peakYear: 1587,
-    capital: { name: '伊斯法罕', lat: 32.7, lng: 51.7 },
+    capital: { name: '伊斯法罕', nameEn: 'Isfahan', lat: 32.7, lng: 51.7 },
     brief: '萨法维王朝与奥斯曼东西并立，阿拔斯大帝时期经济文化繁荣，伊斯兰什叶派中心。',
     relatedNodeIds: ['safavid-persia'],
     polygons: [
@@ -526,11 +552,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-mughal',
     name: '莫卧儿帝国',
+    nameEn: 'Mughal Empire',
     civilization: 'southAsia',
     startYear: 1526,
     endYear: 1857,
     peakYear: 1700,
-    capital: { name: '德里', lat: 28.6, lng: 77.2 },
+    capital: { name: '德里', nameEn: 'Delhi', lat: 28.6, lng: 77.2 },
     brief: '奥朗则布时期疆域达极盛，几乎统一整个印度次大陆，建筑与艺术成就辉煌。',
     relatedNodeIds: ['mughal-empire', 'akbar-religious-synthesis', 'aurangzeb-decline'],
     polygons: [
@@ -546,11 +573,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-inka',
     name: '印加帝国',
+    nameEn: 'Inca Empire',
     civilization: 'america',
     startYear: 1438,
     endYear: 1533,
     peakYear: 1527,
-    capital: { name: '库斯科', lat: -13.5, lng: -71.9 },
+    capital: { name: '库斯科', nameEn: 'Cusco', lat: -13.5, lng: -71.9 },
     brief: '安第斯山脉的黄金帝国，沿太平洋沿岸从厄瓜多尔延伸至智利中部。',
     relatedNodeIds: ['inca-empire'],
     polygons: [
@@ -566,11 +594,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-aztec',
     name: '阿兹特克帝国',
+    nameEn: 'Aztec Empire',
     civilization: 'america',
     startYear: 1428,
     endYear: 1521,
     peakYear: 1500,
-    capital: { name: '特诺奇蒂特兰', lat: 19.4, lng: -99.1 },
+    capital: { name: '特诺奇蒂特兰', nameEn: 'Tenochtitlan', lat: 19.4, lng: -99.1 },
     brief: '中美洲霸主，以墨西哥谷地为中心，宗教与军事文明高度发达。',
     relatedNodeIds: ['aztec-empire'],
     polygons: [
@@ -586,11 +615,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-spanish',
     name: '西班牙帝国',
+    nameEn: 'Spanish Empire',
     civilization: 'europe',
     startYear: 1492,
     endYear: 1898,
     peakYear: 1600,
-    capital: { name: '马德里', lat: 40.4, lng: -3.7 },
+    capital: { name: '马德里', nameEn: 'Madrid', lat: 40.4, lng: -3.7 },
     brief: '首个日不落帝国，美洲大片殖民地 + 菲律宾 + 尼德兰 + 南意大利，黄金时代。',
     relatedNodeIds: ['spanish-empire', 'columbus'],
     polygons: [
@@ -625,11 +655,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-portuguese',
     name: '葡萄牙殖民帝国',
+    nameEn: 'Portuguese Empire',
     civilization: 'europe',
     startYear: 1415,
     endYear: 1999,
     peakYear: 1550,
-    capital: { name: '里斯本', lat: 38.7, lng: -9.1 },
+    capital: { name: '里斯本', nameEn: 'Lisbon', lat: 38.7, lng: -9.1 },
     brief: '大航海时代先驱，拥有巴西、莫桑比克、安哥拉、果阿、澳门等海外领地。',
     relatedNodeIds: ['da-gama', 'magellan'],
     polygons: [
@@ -651,11 +682,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-dutch',
     name: '荷兰海上帝国',
+    nameEn: 'Dutch Maritime Empire',
     civilization: 'europe',
     startYear: 1581,
     endYear: 1975,
     peakYear: 1650,
-    capital: { name: '阿姆斯特丹', lat: 52.4, lng: 4.9 },
+    capital: { name: '阿姆斯特丹', nameEn: 'Amsterdam', lat: 52.4, lng: 4.9 },
     brief: '17世纪海上马车夫，拥有东印度公司，控制马六甲、好望角、新尼德兰等。',
     relatedNodeIds: ['dutch-revolt', 'economy-dutch-finance'],
     polygons: [
@@ -675,11 +707,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-napoleonic',
     name: '法兰西第一帝国',
+    nameEn: 'First French Empire',
     civilization: 'europe',
     startYear: 1804,
     endYear: 1815,
     peakYear: 1812,
-    capital: { name: '巴黎', lat: 48.9, lng: 2.3 },
+    capital: { name: '巴黎', nameEn: 'Paris', lat: 48.9, lng: 2.3 },
     brief: '拿破仑极盛时期几乎控制整个西欧，法军东征莫斯科，法国影响力达顶峰。',
     relatedNodeIds: ['napoleon', 'war-napoleonic'],
     polygons: [
@@ -694,11 +727,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-british',
     name: '大英帝国',
+    nameEn: 'British Empire',
     civilization: 'europe',
     startYear: 1583,
     endYear: 1997,
     peakYear: 1920,
-    capital: { name: '伦敦', lat: 51.5, lng: -0.1 },
+    capital: { name: '伦敦', nameEn: 'London', lat: 51.5, lng: -0.1 },
     brief: '历史上最大的日不落帝国，殖民地遍布全球，维多利亚时代疆域达3367万平方公里。',
     relatedNodeIds: ['british-empire', 'industrial-revolution'],
     polygons: [
@@ -743,11 +777,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-qing',
     name: '清朝',
+    nameEn: 'Qing Dynasty',
     civilization: 'china',
     startYear: 1644,
     endYear: 1912,
     peakYear: 1760,
-    capital: { name: '北京', lat: 39.9, lng: 116.4 },
+    capital: { name: '北京', nameEn: 'Beijing', lat: 39.9, lng: 116.4 },
     brief: '乾隆时期疆域达极盛，西跨葱岭、东接太平洋、北至西伯利亚、南包南海诸岛。',
     relatedNodeIds: ['qing-dynasty'],
     polygons: [
@@ -764,11 +799,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-russian',
     name: '俄罗斯帝国',
+    nameEn: 'Russian Empire',
     civilization: 'europe',
     startYear: 1721,
     endYear: 1917,
     peakYear: 1900,
-    capital: { name: '圣彼得堡', lat: 59.9, lng: 30.3 },
+    capital: { name: '圣彼得堡', nameEn: 'Saint Petersburg', lat: 59.9, lng: 30.3 },
     brief: '从波罗的海延伸至太平洋，横跨欧亚，世界历史上连续领土面积最大的国家之一。',
     relatedNodeIds: ['russian-empire', 'peter-the-great-reform'],
     polygons: [
@@ -787,11 +823,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-german-2nd',
     name: '德意志第二帝国',
+    nameEn: 'German Empire (Second Reich)',
     civilization: 'europe',
     startYear: 1871,
     endYear: 1918,
     peakYear: 1900,
-    capital: { name: '柏林', lat: 52.5, lng: 13.4 },
+    capital: { name: '柏林', nameEn: 'Berlin', lat: 52.5, lng: 13.4 },
     brief: '俾斯麦统一德意志，工业与军事迅速崛起，一战前成为欧洲第二大强国。',
     relatedNodeIds: ['german-unification', 'person-bismarck', 'ww1-western-front'],
     polygons: [
@@ -807,11 +844,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-soviet',
     name: '苏联',
+    nameEn: 'Soviet Union',
     civilization: 'europe',
     startYear: 1922,
     endYear: 1991,
     peakYear: 1975,
-    capital: { name: '莫斯科', lat: 55.8, lng: 37.6 },
+    capital: { name: '莫斯科', nameEn: 'Moscow', lat: 55.8, lng: 37.6 },
     brief: '冷战时期超级大国，疆域横跨欧亚大陆，与美国形成两极格局。',
     relatedNodeIds: ['october-revolution', 'event-soviet-industrialization', 'cold-war'],
     polygons: [
@@ -831,11 +869,12 @@ export const EMPIRES: IEmpire[] = [
   {
     id: 'emp-usa-20c',
     name: '美国（20世纪）',
+    nameEn: 'United States (20th century)',
     civilization: 'america',
     startYear: 1898,
     endYear: 2026,
     peakYear: 2000,
-    capital: { name: '华盛顿', lat: 38.9, lng: -77.0 },
+    capital: { name: '华盛顿', nameEn: 'Washington', lat: 38.9, lng: -77.0 },
     brief: '20世纪崛起为超级大国，二战后主导全球秩序，冷战后成为唯一超级大国。',
     relatedNodeIds: ['ww2-pearl-harbor', 'cold-war'],
     polygons: [

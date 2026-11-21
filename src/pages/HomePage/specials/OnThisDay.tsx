@@ -14,7 +14,7 @@ interface OnThisDayProps {
 }
 
 export default function OnThisDay({ store }: OnThisDayProps) {
-  const { nt, ns } = useI18n();
+  const { nt, ns, ny } = useI18n();
   const today = useMemo(() => new Date(), []);
   const month = today.getMonth() + 1;
   const day = today.getDate();
@@ -159,7 +159,7 @@ export default function OnThisDay({ store }: OnThisDayProps) {
               onClick={() => handleNodeClick(node.id)}
               className="group rounded-lg border border-border/40 bg-card/40 p-3 text-left transition-all hover:border-border hover:bg-card/80"
             >
-              <div className="mb-1 text-[10px] text-primary">{node.yearDisplay}</div>
+              <div className="mb-1 text-[10px] text-primary">{ny(node.yearDisplay)}</div>
               <h4 className="mb-1 text-xs font-semibold font-serif line-clamp-2">
                 {nt(node)}
               </h4>

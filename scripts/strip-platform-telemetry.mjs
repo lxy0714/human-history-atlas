@@ -81,7 +81,27 @@ if (filled > 0) {
   console.log(`[strip-telemetry] 已回填 ${filled} 处平台占位符（appName / appDescription / appAvatar）`);
 }
 
-if (removed === 0 && filled === 0) {
+// 平台把 Google Fonts 反代到 miaoda.feishu.cn/fonts，构建产物里的
+// preconnect 与 stylesheet 都指向它。独立部署不应依赖平台主机：
+// 路径结构一致，/fonts/css2?... 等价于 fonts.googleapis.com/css2?...
+// 注意：MIAODA_FONTS_MIRROR_OFF=1 在实测中并未移除这些 link，故在此兜底。
+const FONT_MIRROR = 'https://miaoda.feishu.cn/fonts';
+let fonts = 0;
+if (html.includes(FONT_MIRROR)) {
+  fonts = html.split(FONT_MIRROR).length - 1;
+  html = html.split(`${FONT_MIRROR}/css2`).join('https://fonts.googleapis.com/css2');
+  html = html.split(FONT_MIRROR).join('https://fonts.googleapis.com');
+  // 字体文件实际来自 gstatic，补一条 preconnect 省一次握手
+  if (!html.includes('fonts.gstatic.com')) {
+    html = html.replace(
+      '<link rel="preconnect" href="https://fonts.googleapis.com">',
+      '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+    );
+  }
+  console.log(`[strip-telemetry] 已把 ${fonts} 处平台字体镜像改写为 Google Fonts 官方源`);
+}
+
+if (removed === 0 && filled === 0 && fonts === 0) {
   console.log('[strip-telemetry] 未发现平台遥测脚本，产物已是干净的（或已处理过）');
   process.exit(0);
 }
@@ -92,7 +112,8 @@ const before = Buffer.byteLength(original, 'utf8');
 const after = Buffer.byteLength(html, 'utf8');
 console.log(`[strip-telemetry] 已移除 ${removed} 个平台脚本`);
 console.log(`[strip-telemetry] ${target}`);
-console.log(`[strip-telemetry] ${before} → ${after} 字节（-${before - after}）`);
+const delta = after - before;
+console.log(`[strip-telemetry] ${before} → ${after} 字节（${delta >= 0 ? '+' : ''}${delta}）`);
 
 // 复核：确认目标主机确已消失
 const remaining = ['feishucdn.com', 'ibytedapm.com', 'bytescm.com', 'miaoda.feishu.cn'].filter((h) =>

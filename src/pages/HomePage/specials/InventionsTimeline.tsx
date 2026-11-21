@@ -14,7 +14,7 @@ interface InventionsTimelineProps {
 }
 
 export default function InventionsTimeline({ store }: InventionsTimelineProps) {
-  const { nt } = useI18n();
+  const { nt, ny } = useI18n();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -126,7 +126,7 @@ export default function InventionsTimeline({ store }: InventionsTimelineProps) {
                       <div className="mb-1 text-2xl">{info.icon}</div>
                       <p className="text-xs font-semibold font-serif">{nt(node)}</p>
                       <p className="mt-0.5 text-[10px] text-muted-foreground">
-                        {node.yearDisplay}
+                        {ny(node.yearDisplay)}
                       </p>
                     </div>
                   )}
@@ -168,7 +168,7 @@ export default function InventionsTimeline({ store }: InventionsTimelineProps) {
                       <div className="mb-1 text-2xl">{info.icon}</div>
                       <p className="text-xs font-semibold font-serif">{nt(node)}</p>
                       <p className="mt-0.5 text-[10px] text-muted-foreground">
-                        {node.yearDisplay}
+                        {ny(node.yearDisplay)}
                       </p>
                     </div>
                   )}
@@ -204,7 +204,7 @@ export default function InventionsTimeline({ store }: InventionsTimelineProps) {
                 <div className="min-w-0 flex-1">
                   <h3 className="text-lg font-bold font-serif">{nt(selected)}</h3>
                   <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                    <span>{selected.yearDisplay}</span>
+                    <span>{ny(selected.yearDisplay)}</span>
                     <span>·</span>
                     <span>{selected.inventor}</span>
                     <span>·</span>

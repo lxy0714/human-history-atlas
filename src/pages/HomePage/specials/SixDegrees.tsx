@@ -21,7 +21,7 @@ interface NodeSelectorProps {
 }
 
 function NodeSelector({ value, onChange, placeholder, excludeId }: NodeSelectorProps) {
-  const { nt, ns } = useI18n();
+  const { nt, ns, ny } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, 180);
@@ -35,7 +35,7 @@ function NodeSelector({ value, onChange, placeholder, excludeId }: NodeSelectorP
       (n) =>
         n.id !== excludeId &&
         (bilingualHaystack(n.title, nt(n)).toLowerCase().includes(q) ||
-          ns(n).toLowerCase().includes(q) ||
+          bilingualHaystack(n.summary, ns(n)).toLowerCase().includes(q) ||
           n.id.toLowerCase().includes(q)),
     ).slice(0, 30);
   }, [debouncedQuery, excludeId]);
@@ -58,7 +58,7 @@ function NodeSelector({ value, onChange, placeholder, excludeId }: NodeSelectorP
               style={{ backgroundColor: CIVILIZATIONS[node.civilization]?.color ?? '#888' }}
             />
             <span className="truncate">{nt(node)}</span>
-            <span className="ml-auto text-[10px] text-muted-foreground">{node.yearDisplay}</span>
+            <span className="ml-auto text-[10px] text-muted-foreground">{ny(node.yearDisplay)}</span>
           </button>
         ) : (
           <Input
@@ -103,7 +103,7 @@ function NodeSelector({ value, onChange, placeholder, excludeId }: NodeSelectorP
                   />
                   <span className="truncate">{nt(n)}</span>
                   <span className="ml-auto text-[10px] text-muted-foreground">
-                    {n.yearDisplay}
+                    {ny(n.yearDisplay)}
                   </span>
                 </button>
               ))
@@ -128,7 +128,7 @@ interface SixDegreesProps {
 }
 
 export default function SixDegrees({ store }: SixDegreesProps) {
-  const { ln, nt } = useI18n();
+  const { ln, nt, ny } = useI18n();
   const [fromId, setFromId] = useState<string | null>(null);
   const [toId, setToId] = useState<string | null>(null);
   const [searching, setSearching] = useState(false);
@@ -266,7 +266,7 @@ export default function SixDegrees({ store }: SixDegreesProps) {
                         <span className="truncate text-sm font-medium">{nt(node)}</span>
                       </div>
                       <div className="text-[10px] text-muted-foreground">
-                        {ln(CIVILIZATIONS[node.civilization], node.civilization)} · {node.yearDisplay}
+                        {ln(CIVILIZATIONS[node.civilization], node.civilization)} · {ny(node.yearDisplay)}
                       </div>
                     </div>
                     <ArrowRight className="size-3 text-muted-foreground" />

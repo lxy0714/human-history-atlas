@@ -7,6 +7,8 @@
 //   - 持久化到 scopedStorage
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { localizeYearDisplay } from './year-display';
+import { setYearFormatLang } from '@/pages/HomePage/year-utils';
 import { safeScopedStorage } from '@/lib/safeScopedStorage';
 import type { I18nDict, I18nLang } from './types';
 
@@ -64,6 +66,8 @@ interface I18nContextValue {
   nt: (node: LocalizableNode | undefined | null) => string;
   /** 取节点摘要：英文态查 EN_NODE_META.summaryEn，未译或非节点对象原样返回 */
   ns: (node: LocalizableNode | undefined | null) => string;
+  /** 取本地化年份显示串：英文态转换数据里预存的中文 yearDisplay */
+  ny: (yearDisplay: string | undefined | null) => string;
   isLoading: boolean; // 切换语言时加载包的短暂 loading 态
 }
 
@@ -169,6 +173,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [nodeMeta, setNodeMeta] = useState<NodeMetaMap | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // 在 render 体内同步设置：Provider 先于子组件渲染，formatYear 的 100+ 调用点
+  // 因此无需逐点传 lang 即可拿到正确语言。
+  setYearFormatLang(lang);
+
   // 首次挂载：若非中文，并行加载语言包与英文节点元数据
   useEffect(() => {
     let cancelled = false;
@@ -219,9 +227,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     [lang, nodeMeta],
   );
 
+  const ny = useMemo(
+    () => (yearDisplay: string | undefined | null) => localizeYearDisplay(yearDisplay ?? '', lang),
+    [lang],
+  );
+
   const value = useMemo<I18nContextValue>(
-    () => ({ lang, setLang, t, ln, nt, ns, isLoading }),
-    [lang, setLang, t, ln, nt, ns, isLoading],
+    () => ({ lang, setLang, t, ln, nt, ns, ny, isLoading }),
+    [lang, setLang, t, ln, nt, ns, ny, isLoading],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
@@ -241,6 +254,7 @@ export function useI18n() {
         entry?.name ?? fallback,
       nt: (node: LocalizableNode | undefined | null) => node?.title ?? '',
       ns: (node: LocalizableNode | undefined | null) => node?.summary ?? '',
+      ny: (yearDisplay: string | undefined | null) => yearDisplay ?? '',
       isLoading: false,
     };
   }

@@ -66,3 +66,7 @@ pnpm-lock.yaml
 # 平台内部目录（开源版不需要）
 .spark/
 .spark_project
+
+# 一次性脚本，不进仓库
+*.tmp.ts
+*.tmp.mjs

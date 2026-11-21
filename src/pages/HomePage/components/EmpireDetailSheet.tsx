@@ -22,7 +22,7 @@ export default function EmpireDetailSheet({
   onClose,
   onNodeClick,
 }: EmpireDetailSheetProps) {
-  const { ln, nt } = useI18n();
+  const { ln, nt, ny } = useI18n();
   const isMobile = useIsMobile();
 
   const civColor =
@@ -49,7 +49,7 @@ export default function EmpireDetailSheet({
             <Crown className="mr-1 size-3" />
             {civName}文明
           </Badge>
-          <h2 className="text-lg font-bold font-serif">{empire.name}</h2>
+          <h2 className="text-lg font-bold font-serif">{ln(empire)}</h2>
           <p className="mt-1 text-xs text-muted-foreground">
             <Calendar className="mr-1 inline size-3" />
             {formatYear(empire.startYear)} — {formatYear(empire.endYear)}
@@ -72,7 +72,7 @@ export default function EmpireDetailSheet({
         <MapPin className="size-4 text-primary" />
         <div>
           <div className="text-xs text-muted-foreground">首都</div>
-          <div className="text-sm font-medium">{empire.capital.name}</div>
+          <div className="text-sm font-medium">{ln(empire.capital)}</div>
         </div>
       </div>
 
@@ -109,7 +109,7 @@ export default function EmpireDetailSheet({
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-xs font-medium">{nt(node)}</div>
                     <div className="truncate text-[10px] text-muted-foreground">
-                      {node.yearDisplay}
+                      {ny(node.yearDisplay)}
                     </div>
                   </div>
                 </button>

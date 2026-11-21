@@ -9,6 +9,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Crown, Star } from 'lucide-react';
 import { formatYear } from '@/pages/HomePage/year-utils';
+import { useI18n } from '@/i18n';
 
 interface EmpireLayerProps {
   map: L.Map | null;
@@ -164,6 +165,7 @@ export default function EmpireLayer({
   onSelectEmpire,
 }: EmpireLayerProps) {
   const isMobile = useIsMobile();
+  const { ln, t } = useI18n();
   const polyLayerRef = useRef<L.LayerGroup | null>(null);
   const capLayerRef = useRef<L.LayerGroup | null>(null);
   const fadeTimerRef = useRef<number | null>(null);
@@ -292,13 +294,13 @@ export default function EmpireLayer({
           });
           poly.bindTooltip(
             `<div style="font-size: 12px; line-height: 1.5; min-width: 160px;">
-              <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px; color: ${color};">${empire.name}</div>
+              <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px; color: ${color};">${ln(empire)}</div>
               <div style="color: #c9a96e; font-size: 11px; margin-bottom: 2px;">
                 ${formatYear(empire.startYear)}
                 &nbsp;—&nbsp;
                 ${formatYear(empire.endYear)}
               </div>
-              <div style="font-size: 11px; color: #aaa;">首都：${empire.capital.name}</div>
+              <div style="font-size: 11px; color: #aaa;">${t('map.capital', '首都')}：${ln(empire.capital)}</div>
               <div style="font-size: 11px; color: #888; margin-top: 3px;">${empire.brief}</div>
             </div>`,
             {
@@ -314,7 +316,7 @@ export default function EmpireLayer({
 
         const cap = createCapitalMarker(empire, color);
         cap.bindTooltip(
-          `<strong>${empire.capital.name}</strong><br/><span style="font-size: 11px; color: #aaa;">${empire.name}首都</span>`,
+          `<strong>${ln(empire.capital)}</strong><br/><span style="font-size: 11px; color: #aaa;">${t('map.capitalOf', '首都')} · ${ln(empire)}</span>`,
           {
             direction: 'top',
             offset: [0, -6],
@@ -415,13 +417,13 @@ export default function EmpireLayer({
                     ]?.color ?? '#888',
                 }}
               />
-              <span className="font-bold font-display">{hoveredEmpire.name}</span>
+              <span className="font-bold font-display">{ln(hoveredEmpire)}</span>
             </div>
             <div className="text-[11px] text-primary">
               {formatYear(hoveredEmpire.startYear)} — {formatYear(hoveredEmpire.endYear)}
             </div>
             <div className="mt-1.5 text-xs text-foreground/80">
-              首都：{hoveredEmpire.capital.name}
+              {t('map.capital', '首都')}：{ln(hoveredEmpire.capital)}
             </div>
             <div className="mt-1 text-xs text-muted-foreground line-clamp-2">
               {hoveredEmpire.brief}
@@ -446,7 +448,7 @@ export default function EmpireLayer({
           >
             <div className="flex items-center justify-between border-b border-border/30 px-3 py-2">
               <div className="text-xs font-semibold font-display">
-                并立帝国 · {empiresAtYear.length}
+                {t('map.concurrentEmpires', '并立帝国')} · {empiresAtYear.length}
               </div>
               <button
                 onClick={() => setConcurrentPanelOpen((v) => !v)}
@@ -485,7 +487,7 @@ export default function EmpireLayer({
                             }}
                           />
                           <span className="truncate text-xs font-medium">
-                            {empire.name}
+                            {ln(empire)}
                           </span>
                         </div>
                         <div className="mt-0.5 text-[10px] text-muted-foreground">
