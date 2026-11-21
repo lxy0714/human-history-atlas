@@ -24,6 +24,8 @@ import {
   LAYOUT_LEVEL1_RADIUS,
   LAYOUT_LEVEL2_RADIUS,
 } from '../graph-view-constants';
+import { useI18n } from '@/i18n';
+import { smartTrim } from '@/i18n/text';
 
 interface RelationGraphModalProps {
   centerNodeId: string;
@@ -58,6 +60,7 @@ export default function RelationGraphModal({
   onClose,
   onNodeClick,
 }: RelationGraphModalProps) {
+  const { t, nt } = useI18n();
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -94,6 +97,7 @@ export default function RelationGraphModal({
 
   // 节点和连线数据
   const { nodes, links } = useMemo(() => {
+  
     const nodeMap = new Map<string, GraphNode>();
     const linkList: GraphLink[] = [];
 
@@ -111,7 +115,7 @@ export default function RelationGraphModal({
       vy: 0,
       level: 0,
       radius: 36,
-      title: centerNodeData.title,
+      title: nt(centerNodeData),
       color: '#f1c40f', // 金色高亮
     });
 
@@ -139,7 +143,7 @@ export default function RelationGraphModal({
         vy: 0,
         level: 1,
         radius: 22,
-        title: n.title,
+        title: nt(n),
         color: nc,
       });
 
@@ -178,7 +182,7 @@ export default function RelationGraphModal({
             vy: 0,
             level: 2,
             radius: 16,
-            title: n.title,
+            title: nt(n),
             color: nc,
           });
 
@@ -209,6 +213,7 @@ export default function RelationGraphModal({
   }, [nodes, open]);
 
   useEffect(() => {
+  
     if (!open) return;
 
     const reducedMotion = typeof window !== 'undefined'
@@ -252,6 +257,7 @@ export default function RelationGraphModal({
     }
 
     function tick() {
+  
       const nodeMap = new Map(nodeArr.map((n) => [n.id, n]));
 
       // 1. 斥力（所有节点之间）
@@ -421,7 +427,7 @@ export default function RelationGraphModal({
              <Maximize2 className="size-4 text-primary" />
              <div>
                <h2 className="text-sm font-semibold md:text-base">
-                 关联图谱 · {findNodeById(currentCenter)?.title}
+                 关联图谱 · {nt(findNodeById(currentCenter))}
                </h2>
                <p className="text-[10px] text-muted-foreground md:text-xs">
                  双击节点切换中心 · 拖拽节点 · 滚轮缩放 · 空白拖动平移
@@ -581,6 +587,7 @@ export default function RelationGraphModal({
 
               {/* 节点 */}
               {displayNodes.map((node) => {
+  
                 const isCenter = node.level === 0;
                 const isHovered = hoveredNodeId === node.id;
                 const fontSize = isCenter ? 11 : node.level === 1 ? 9 : 7;
@@ -630,7 +637,7 @@ export default function RelationGraphModal({
                       fontWeight={isCenter ? 700 : 500}
                       style={{ pointerEvents: 'none' }}
                     >
-                      {node.title.length > 6 ? node.title.slice(0, 5) + '…' : node.title}
+                      {smartTrim(nt(node), 5)}
                     </text>
                   </g>
                 );

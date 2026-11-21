@@ -1,5 +1,6 @@
 // EXPORTS: LayerControlPanel
 import { useState } from 'react';
+import { useI18n } from '@/i18n';
 import { Layers, X, MapPin, Route, Crown, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -48,6 +49,7 @@ export default function LayerControlPanel({
   onSelectPeakEmpire,
   onEraJump,
 }: LayerControlPanelProps) {
+  const { ln } = useI18n();
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
 
@@ -182,7 +184,7 @@ export default function LayerControlPanel({
                 color: era.accent,
               }}
             >
-              {era.name}
+              {ln(era)}
             </Button>
           ))}
         </div>

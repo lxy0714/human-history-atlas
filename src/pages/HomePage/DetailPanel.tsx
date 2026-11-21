@@ -55,7 +55,7 @@ function getEraGradient(eraId: string): string {
 }
 
 export default memo(function DetailPanel({ store }: DetailPanelProps) {
-  const { t, lang } = useI18n();
+  const { t, ln, nt, ns, lang } = useI18n();
   const { selectedNode, detailTrigger, closeDetail, scrollToNode, openCompare, toggleFavorite, isFavorite, prevNode: storePrev, nextNode: storeNext } = store;
   const isMobile = useIsMobile();
   const progress = useLearningProgress();
@@ -74,6 +74,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
   // - 自动恢复的节点（detailTrigger==='auto'）：延后到 requestIdleCallback，不抢首屏带宽
   // - 用户主动点击的节点：立即加载
   useEffect(() => {
+  
     if (!selectedNode) {
       setBodyText(null);
       setBodyLoading(false);
@@ -105,6 +106,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
       setBodyIsFallback(false);
       loadNodeBodyBilingual(nodeId, targetLang)
         .then((result) => {
+  
           if (cancelled) return;
           if (result.text) {
             setBodyText(result.text);
@@ -117,6 +119,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
           }
         })
         .catch((err) => {
+  
           if (cancelled) return;
           const msg = err instanceof Error ? err.message : String(err);
           setBodyError(msg || t('detail.bodyLoadFailed', '正文加载失败'));
@@ -151,12 +154,14 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
   }, [selectedNode?.id, detailTrigger]);
 
   const retryBody = () => {
+  
     if (!selectedNode) return;
     setBodyLoading(true);
     setBodyError(null);
     setBodyIsFallback(false);
     loadNodeBodyBilingual(selectedNode.id, lang)
       .then((result) => {
+  
         if (result.text) {
           setBodyText(result.text);
           setBodyLang(result.lang);
@@ -167,6 +172,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
         }
       })
       .catch((err) => {
+  
         const msg = err instanceof Error ? err.message : String(err);
         setBodyError(msg || t('detail.bodyLoadFailed', '正文加载失败'));
         logger.error('正文重试加载失败:', String(err));
@@ -220,7 +226,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
   const [rulerHoverPercent, setRulerHoverPercent] = useState<number | null>(null);
   const rulerHoverYear = rulerHoverPercent !== null ? rulerPercentToYear(rulerHoverPercent) : null;
   const civName = selectedNode
-    ? CIVILIZATIONS[selectedNode.civilization]?.name ?? selectedNode.civilization
+    ? ln(CIVILIZATIONS[selectedNode.civilization], selectedNode.civilization)
     : '';
 
   // 正文段落
@@ -266,6 +272,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
 
     // reason 映射表（typed 按类型，related 统一为"相关"）
     const getReason = (item: AssociationItem): { reason: string; reasonIcon: string } => {
+  
       if (item.source === 'typed' && item.type === 'causal') {
         const isCause = item.direction === 'from' ? false : true; // direction='to' 表示对方是 from（因），我方是 to（果）
         return isCause
@@ -310,6 +317,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
           n.id !== selectedNode.id,
       )
         .sort((a, b) => {
+  
           // 重要节点优先
           if ((b.important ? 1 : 0) !== (a.important ? 1 : 0)) {
             return (b.important ? 1 : 0) - (a.important ? 1 : 0);
@@ -317,10 +325,11 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
           // 按年份升序（从早到晚）
           if (a.year !== b.year) return a.year - b.year;
           // 同年份按标题字典序
-          return a.title.localeCompare(b.title, 'zh-CN');
+          return a.title.localeCompare(nt(b), 'zh-CN');
         })
         .slice(0, 6 - result.length);
       sameEraCiv.forEach((n) => {
+  
         result.push({ node: n, reason: t('detail.reasonSameEra', '同代文明'), reasonIcon: '' });
         added.add(n.id);
       });
@@ -362,6 +371,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
     // 相关延伸（relatedNodeIds 来源）
     result.related = assoc.related
       .map((a) => {
+  
         const n = findNodeById(a.targetId);
         return n ? { node: n, label: t('detail.reasonRelated', '相关延伸') } : null;
       })
@@ -379,6 +389,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
   const [graphOpen, setGraphOpen] = useState(false);
 
   const typeLabel = (type: string) => {
+  
     switch (type) {
       case 'person': return t('detail.typePerson', '人物');
       case 'dynasty': return t('detail.typeDynasty', '朝代');
@@ -510,6 +521,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
           })}
           {/* 前后关联节点 */}
           {[...nearbyNodes.before, ...nearbyNodes.after].map((node) => {
+  
             const p = yearToRulerPercent(node.year);
             const nCivColor = CIVILIZATIONS[node.civilization]?.color ?? '#888';
             return (
@@ -521,7 +533,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
                   top: `calc(${p}% + 16px - 4px)`,
                   backgroundColor: nCivColor,
                 }}
-                title={`${node.yearDisplay}  ${node.title}`}
+                title={`${node.yearDisplay}  ${nt(node)}`}
               />
             );
           })}
@@ -644,7 +656,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
             <>
               <Image
                 src={wikimediaUrl}
-                alt={selectedNode?.title}
+                alt={nt(selectedNode)}
                 loading="lazy"
                 decoding="async"
                 className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
@@ -738,7 +750,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
                disabled={!prevNode}
                 className="h-10 w-10 rounded-[2px] border border-white/20 bg-black/30 text-white hover:bg-black/50 hover:text-white disabled:opacity-30"
                 aria-label={t('detail.prevNode', '上一个节点')}
-               title={prevNode?.title}
+               title={nt(prevNode)}
              >
                <ArrowLeft className="size-4" />
              </Button>
@@ -749,7 +761,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
                disabled={!nextNode}
                 className="h-10 w-10 rounded-[2px] border border-white/20 bg-black/30 text-white hover:bg-black/50 hover:text-white disabled:opacity-30"
                aria-label={t('detail.nextNode', '下一个节点')}
-               title={nextNode?.title}
+               title={nt(nextNode)}
              >
                <ArrowRight className="size-4" />
              </Button>
@@ -765,7 +777,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
               size="md"
             />
             {era && (
-              <CivilBadge variant="era" color={era.accent} label={era.name} size="md" />
+              <CivilBadge variant="era" color={era.accent} label={ln(era)} size="md" />
             )}
             {node.important && (
               <CivilBadge variant="important" label={t('detail.important', '重要节点')} size="md" />
@@ -797,7 +809,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
              className="flex-1 text-xl font-black leading-tight text-white drop-shadow-lg md:text-2xl font-display"
             style={{ textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}
           >
-            {node.title}
+            {nt(node)}
           </h2>
           {/* 移动端收藏按钮 */}
           {isMobile && (
@@ -870,7 +882,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
               color: civColor,
             }}
           >
-            {node.summary}
+            {ns(node)}
           </p>
 
           {/* 核心记忆点 */}
@@ -1118,6 +1130,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
                    />
                    {/* 前后关联节点 */}
                    {[...nearbyNodes.before, ...nearbyNodes.after].map((node) => {
+  
                      const p = yearToRulerPercent(node.year);
                      const nCivColor = CIVILIZATIONS[node.civilization]?.color ?? '#888';
                      return (
@@ -1129,7 +1142,7 @@ export default memo(function DetailPanel({ store }: DetailPanelProps) {
                            left: `${p}%`,
                            backgroundColor: nCivColor,
                          }}
-                         title={`${node.yearDisplay}  ${node.title}`}
+                         title={`${node.yearDisplay}  ${nt(node)}`}
                        />
                      );
                    })}

@@ -53,17 +53,17 @@ export interface IHistoryNode {
   keyPoints?: string[]; // 核心记忆点 3-5 条
 }
 
-export const CIVILIZATIONS: Record<CivilizationKey, { name: string; color: string }> = {
-  china: { name: '中国', color: '#c0392b' },
-  europe: { name: '欧洲', color: '#2c3e80' },
-  middleEast: { name: '中东', color: '#d4a843' },
-  southAsia: { name: '南亚', color: '#e67e22' },
-  eastAsia: { name: '东亚其他', color: '#16a085' },
-  america: { name: '美洲', color: '#27ae60' },
-  africa: { name: '非洲', color: '#a0522d' },
-  centralAsia: { name: '中亚', color: '#c0793a' },
-  oceania: { name: '大洋洲', color: '#2980b9' },
-  global: { name: '全球', color: '#9b59b6' },
+export const CIVILIZATIONS: Record<CivilizationKey, { name: string; nameEn?: string; color: string }> = {
+  china: { name: '中国', nameEn: 'China', color: '#c0392b' },
+  europe: { name: '欧洲', nameEn: 'Europe', color: '#2c3e80' },
+  middleEast: { name: '中东', nameEn: 'Middle East', color: '#d4a843' },
+  southAsia: { name: '南亚', nameEn: 'South Asia', color: '#e67e22' },
+  eastAsia: { name: '东亚其他', nameEn: 'East Asia (other)', color: '#16a085' },
+  america: { name: '美洲', nameEn: 'Americas', color: '#27ae60' },
+  africa: { name: '非洲', nameEn: 'Africa', color: '#a0522d' },
+  centralAsia: { name: '中亚', nameEn: 'Central Asia', color: '#c0793a' },
+  oceania: { name: '大洋洲', nameEn: 'Oceania', color: '#2980b9' },
+  global: { name: '全球', nameEn: 'Global', color: '#9b59b6' },
 };
 
 export const CIVILIZATION_COLORS: Record<CivilizationKey, string> = {

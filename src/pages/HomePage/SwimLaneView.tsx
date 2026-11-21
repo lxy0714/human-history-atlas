@@ -95,7 +95,7 @@ function NodeTypeDot({ type, color }: { type: string; color: string }) {
 }
 
 export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
-  const { t, lang } = useI18n();
+  const { t, ln, nt } = useI18n();
   const { filteredNodes, openDetail, selectedNode } = store;
   const [hiddenLanes, setHiddenLanes] = useState<CivilizationKey[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -202,7 +202,7 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
             <div className="inline-flex items-center gap-1.5 rounded-lg bg-card p-1 shadow-xs border border-border/50">
               <div className="flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground cursor-pointer">
                 <Layers className="size-3.5" />
-                <span className="hidden sm:inline">{t('swimlane.title', '文明泳道')}</span>
+                <span className="hidden sm:inline">{t('nt(swimlane)', '文明泳道')}</span>
               </div>
             </div>
             <div className="text-xs text-muted-foreground">
@@ -220,7 +220,7 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
               <SelectContent>
                 {ERAS.map((era) => (
                   <SelectItem key={era.id} value={era.id} className="text-xs">
-                    {era.name}
+                    {ln(era)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -322,6 +322,7 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
             {/* ============ 时代 + 泳道内容 ============ */}
             <div className="relative">
               {ERAS.map((era) => {
+  
                 const hasAny = visibleLanes.some(
                   (l) => nodesByEraAndLane[era.id]?.[l]?.length > 0,
                 );
@@ -365,7 +366,7 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
                             transition: 'color 0.3s ease',
                           }}
                         >
-                          {era.name}
+                          {ln(era)}
                         </span>
                         <span
                           className="tabular-nums text-[9px]"
@@ -430,6 +431,7 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
                             }}
                           >
                             {nodes.map((node) => {
+  
                               const isSelected = selectedNode?.id === node.id;
                               const contemp = isContemporary(node);
                               return (
@@ -453,8 +455,8 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
                                         ? `0 0 0 1px ${civ.color}40`
                                         : 'var(--shadow-resting)',
                                   }}
-                                  aria-label={node.title}
-                                  title={node.title}
+                                  aria-label={nt(node)}
+                                  title={nt(node)}
                                 >
                                   {/* 左侧色条 */}
                                   <span
@@ -476,7 +478,7 @@ export default memo(function SwimLaneView({ store }: SwimLaneViewProps) {
                                         className="line-clamp-2 text-[12px] font-medium leading-snug text-foreground"
                                         style={{ fontFamily: 'var(--font-display)' }}
                                       >
-                                        {node.title}
+                                        {nt(node)}
                                       </div>
                                     </div>
                                   </div>

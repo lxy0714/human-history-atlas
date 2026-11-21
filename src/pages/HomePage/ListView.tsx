@@ -17,7 +17,7 @@ interface ListViewProps {
 }
 
 export default memo(function ListView({ store }: ListViewProps) {
-  const { t, lang } = useI18n();
+  const { t, ln, nt, ns } = useI18n();
   const { filteredNodes, openDetail, currentEra } = store;
 
   // 按时代分组
@@ -55,13 +55,13 @@ export default memo(function ListView({ store }: ListViewProps) {
                     fontFamily: 'var(--font-display)',
                   }}
                 >
-                  {era.name}
+                  {ln(era)}
                 </div>
                 <h2
                   className="mt-2 text-2xl font-bold tracking-wide"
                   style={{ color: era.accent, fontFamily: 'var(--font-display)' }}
                 >
-                  {era.name}
+                  {ln(era)}
                 </h2>
                 <p className="mt-1 text-[11px] text-muted-foreground">
                   {era.description}
@@ -78,6 +78,7 @@ export default memo(function ListView({ store }: ListViewProps) {
             {/* 节点卡片网格 */}
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {nodes.map((node, i) => {
+  
                 const civInfo = CIVILIZATIONS[node.civilization] ?? { name: node.civilization, color: '#888' };
                 const civColor = civInfo.color;
                 return (
@@ -117,10 +118,10 @@ export default memo(function ListView({ store }: ListViewProps) {
                           </span>
                         </div>
                         <CardTitle className="mt-2 text-base font-semibold leading-snug group-hover:text-primary font-serif">
-                          {node.title}
+                          {nt(node)}
                         </CardTitle>
                         <CardDescription className="mt-1 line-clamp-2 text-[13px] leading-6 md:text-xs md:leading-relaxed">
-                          {node.summary}
+                          {ns(node)}
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="p-4 pt-2 pl-5">
@@ -133,7 +134,7 @@ export default memo(function ListView({ store }: ListViewProps) {
                                  key={cat}
                                  variant="category"
                                  category={cat}
-                                 label={`${CATEGORIES[cat]?.icon ?? '◆'} ${CATEGORIES[cat]?.name ?? cat}`}
+                                 label={`${CATEGORIES[cat]?.icon ?? '◆'} ${ln(CATEGORIES[cat], cat)}`}
                                  size="sm"
                                />
                              ))}

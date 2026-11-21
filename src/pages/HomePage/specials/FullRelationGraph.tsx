@@ -2,6 +2,7 @@
 // 全量关系图谱：739节点 + 1450边，ECharts force 布局，按文明着色/度数缩放/类型形状
 
 import { useMemo, useState, useRef, useEffect, useCallback } from 'react';
+import { useI18n } from '@/i18n';
 import ReactECharts from 'echarts-for-react';
 import type { EChartsOption, GraphSeriesOption } from 'echarts';
 import * as echarts from 'echarts/core';
@@ -37,6 +38,7 @@ import {
 import { Search, RotateCcw, ZoomIn, ZoomOut, Target, Network, X, Star } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { bilingualHaystack } from '@/i18n/text';
 
   // 注册 ECharts 组件（仅 graph 需要的）
   echarts.use([TooltipComponent, LegendComponent, ToolboxComponent, GraphChart, CanvasRenderer]);
@@ -66,6 +68,7 @@ function degreeToSize(degree: number, maxDegree: number): number {
 }
 
 export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphProps) {
+  const { ln, nt, ns } = useI18n();
   const isMobile = useIsMobile();
   const chartRef = useRef<ReactECharts | null>(null);
   const [activeTypes, setActiveTypes] = useState<Set<RelationType>>(
@@ -164,6 +167,7 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
       if (isFiltered && !visibleNodeIds.has(n.id)) return false;
       return true;
     }).map((node) => {
+  
       const degree = degreeMap[node.id] ?? 0;
       const civColor = CIVILIZATIONS[node.civilization]?.color ?? '#888';
       const size = degreeToSize(degree, maxDegree);
@@ -172,7 +176,7 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
 
       return {
         id: node.id,
-        name: node.title,
+        name: nt(node),
         value: degree,
         category: node.civilization,
         symbol: TYPE_SYMBOL[node.type ?? 'event'] ?? TYPE_SYMBOL.default,
@@ -251,15 +255,16 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
           fontSize: 12,
         },
         formatter: (params: unknown) => {
+  
           const p = params as { dataType: string; data: { nodeData?: IHistoryNodeIndex; degree?: number; name?: string; type?: RelationType; label?: string } };
           if (p.dataType === 'node' && p.data?.nodeData) {
             const n = p.data.nodeData;
-            const civName = CIVILIZATIONS[n.civilization]?.name ?? n.civilization;
+            const civName = ln(CIVILIZATIONS[n.civilization], n.civilization);
             return `
-              <div style="font-weight:600;font-size:14px;margin-bottom:4px;font-family:serif;">${n.title}</div>
+              <div style="font-weight:600;font-size:14px;margin-bottom:4px;font-family:serif;">${nt(n)}</div>
               <div style="color:#c9a96e;font-size:11px;margin-bottom:4px;">${n.yearDisplay} · ${civName}</div>
               <div style="font-size:11px;color:#aaa;margin-bottom:4px;">关联度：${p.data.degree ?? 0}</div>
-              <div style="font-size:11px;line-height:1.5;max-width:200px;color:#ddd;">${n.summary}</div>
+              <div style="font-size:11px;line-height:1.5;max-width:200px;color:#ddd;">${ns(n)}</div>
               <div style="margin-top:6px;font-size:10px;color:#d4a843;">双击查看详情 →</div>
             `;
           }
@@ -342,13 +347,14 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
 
   // 搜索节点（防抖）
   const searchResults = useMemo(() => {
+  
     if (!debouncedSearch.trim()) return [];
     const q = debouncedSearch.toLowerCase();
     return ALL_HISTORY_NODES_INDEX.filter(
       (n) =>
         n &&
-        (n.title.toLowerCase().includes(q) ||
-          n.summary.toLowerCase().includes(q) ||
+        (bilingualHaystack(n.title, nt(n)).toLowerCase().includes(q) ||
+          ns(n).toLowerCase().includes(q) ||
           n.yearDisplay.includes(q)),
     ).slice(0, 8);
   }, [debouncedSearch]);
@@ -370,12 +376,13 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
 
   // 最短路径查询
   const handleFindPath = useCallback(() => {
+  
     if (!pathFrom || !pathTo) return;
     const fromNode = ALL_HISTORY_NODES_INDEX.find(
-      (n) => n && n.title.includes(pathFrom),
+      (n) => n && bilingualHaystack(n.title, nt(n)).includes(pathFrom),
     );
     const toNode = ALL_HISTORY_NODES_INDEX.find(
-      (n) => n && n.title.includes(pathTo),
+      (n) => n && bilingualHaystack(n.title, nt(n)).includes(pathTo),
     );
     if (!fromNode || !toNode) return;
     const result = findShortestPath(fromNode.id, toNode.id);
@@ -440,7 +447,7 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
                       backgroundColor: CIVILIZATIONS[n.civilization]?.color ?? '#888',
                     }}
                   />
-                  <span className="min-w-0 flex-1 truncate font-medium">{n.title}</span>
+                  <span className="min-w-0 flex-1 truncate font-medium">{nt(n)}</span>
                   <span className="shrink-0 text-[10px] text-muted-foreground">
                     {n.yearDisplay}
                   </span>
@@ -517,7 +524,7 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
           <span className="text-foreground/80">
             Ego 中心：
             <span className="font-semibold">
-              {ALL_HISTORY_NODES_INDEX.find((n) => n?.id === egoNodeId)?.title ?? egoNodeId}
+              {nt(ALL_HISTORY_NODES_INDEX.find((n) => n?.id === egoNodeId)) ?? egoNodeId}
             </span>
             <span className="ml-2 text-muted-foreground">
               度数：{degreeMap[egoNodeId] ?? 0}
@@ -547,7 +554,7 @@ export default function FullRelationGraph({ onOpenDetail }: FullRelationGraphPro
             最短路径：<span className="font-semibold">{highlightPath.length - 1} 步</span>
             <span className="ml-2 text-muted-foreground">
               {highlightPath
-                .map((id) => ALL_HISTORY_NODES_INDEX.find((n) => n?.id === id)?.title ?? id)
+                .map((id) => nt(ALL_HISTORY_NODES_INDEX.find((n) => n?.id === id)) ?? id)
                 .join(' → ')}
             </span>
           </span>

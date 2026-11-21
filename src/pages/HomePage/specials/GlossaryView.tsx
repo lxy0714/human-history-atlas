@@ -21,6 +21,7 @@ import {
   type IGlossaryTerm,
 } from '@/data/glossary';
 import { ALL_HISTORY_NODES_INDEX } from '@/data/history-index';
+import { useI18n } from '@/i18n';
 
 interface GlossaryViewProps {
   store: HistoryState;
@@ -39,9 +40,11 @@ export default function GlossaryView({
   setSearchQuery,
   onBack,
 }: GlossaryViewProps) {
+  const { t, nt } = useI18n();
   const [activeTerm, setActiveTerm] = useState<IGlossaryTerm | null>(null);
 
   const filtered = useMemo(() => {
+  
     let list = GLOSSARY_TERMS;
     if (category !== 'all') {
       list = list.filter((t) => t.category === category);
@@ -63,6 +66,7 @@ export default function GlossaryView({
     if (category !== 'all') return null;
     const map = new Map<GlossaryCategory, IGlossaryTerm[]>();
     filtered.forEach((t) => {
+  
       if (!map.has(t.category)) map.set(t.category, []);
       map.get(t.category)!.push(t);
     });
@@ -72,6 +76,7 @@ export default function GlossaryView({
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = { all: GLOSSARY_TERMS.length };
     GLOSSARY_CATEGORIES.forEach((c) => {
+  
       counts[c.key] = GLOSSARY_TERMS.filter((t) => t.category === c.key).length;
     });
     return counts;
@@ -277,6 +282,7 @@ export default function GlossaryView({
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {activeTerm.relatedNodeIds.map((id) => {
+  
                         const node = ALL_HISTORY_NODES_INDEX.find((n) => n.id === id);
                         if (!node) return null;
                         return (
@@ -285,7 +291,7 @@ export default function GlossaryView({
                             onClick={() => handleNodeClick(id)}
                             className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-secondary/50 px-2.5 py-1 text-xs transition-colors hover:border-primary/40 hover:bg-primary/10"
                           >
-                            <span>{node.title}</span>
+                            <span>{nt(node)}</span>
                             <ExternalLink className="size-3 text-muted-foreground" />
                           </button>
                         );

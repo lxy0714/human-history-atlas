@@ -16,6 +16,7 @@ import {
   MONTH_DAY_TOTAL,
 } from '@/data/month-day-events';
 import { ALL_HISTORY_NODES_INDEX, ERAS } from '@/data/history-index';
+import { useI18n } from '@/i18n';
 
 interface TodayInHistoryProps {
   store: HistoryState;
@@ -39,6 +40,7 @@ const INTRO_WORDS = [
 ];
 
 export default function TodayInHistory({ store, onBack }: TodayInHistoryProps) {
+  const { nt, ns } = useI18n();
   const today = new Date();
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [day, setDay] = useState(today.getDate());
@@ -77,6 +79,7 @@ export default function TodayInHistory({ store, onBack }: TodayInHistoryProps) {
   }, [todayIds, weekIds, monthIds]);
 
   const goToday = () => {
+  
     const t = new Date();
     setMonth(t.getMonth() + 1);
     setDay(t.getDate());
@@ -168,6 +171,7 @@ export default function TodayInHistory({ store, onBack }: TodayInHistoryProps) {
           <div className="absolute left-[7px] top-1 bottom-1 w-px bg-primary/30" />
 
           {displayNodes.map((node, i) => {
+  
             const md = MONTH_DAY_EVENTS[node.id];
             const era = ERAS.find((e) => e.id === node.eraId);
             return (
@@ -192,14 +196,14 @@ export default function TodayInHistory({ store, onBack }: TodayInHistoryProps) {
                     {node.yearDisplay}
                   </Badge>
                   <div className="min-w-0 flex-1">
-                    <h4 className="truncate text-sm font-semibold">{node.title}</h4>
+                    <h4 className="truncate text-sm font-semibold">{nt(node)}</h4>
                     {md && (
                       <p className="mt-0.5 text-[11px] text-muted-foreground">
                         {month}月{md.day}日
                       </p>
                     )}
                     <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground/90">
-                      {node.summary}
+                      {ns(node)}
                     </p>
                   </div>
                 </div>

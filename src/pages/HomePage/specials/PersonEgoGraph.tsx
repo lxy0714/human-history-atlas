@@ -23,6 +23,8 @@ import { useDebouncedValue } from '@/utils/use-performance';
 import type { HistoryState } from '../useHistoryStore';
 import { RELATIONS } from '@/data/relations';
 import { ALL_HISTORY_NODES_INDEX, type IHistoryNodeIndex } from '@/data/history-index';
+import { useI18n } from '@/i18n';
+import { smartTrim, bilingualHaystack } from '@/i18n/text';
 
 interface PersonEgoGraphProps {
   store: HistoryState;
@@ -115,6 +117,7 @@ const ALL_PERSON_NODES = ALL_HISTORY_NODES_INDEX.filter(
 );
 
 export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
+  const { nt, ns } = useI18n();
   const [centerId, setCenterId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearch = useDebouncedValue(searchQuery, 200);
@@ -133,18 +136,20 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
 
   // 搜索结果
   const searchResults = useMemo(() => {
+  
     if (!debouncedSearch.trim()) return [];
     const q = debouncedSearch.toLowerCase();
     return ALL_PERSON_NODES.filter(
       (n) =>
-        n.title.toLowerCase().includes(q) ||
+        bilingualHaystack(n.title, nt(n)).toLowerCase().includes(q) ||
         n.id.toLowerCase().includes(q) ||
-        (n.summary && n.summary.toLowerCase().includes(q)),
+        (ns(n) && ns(n).toLowerCase().includes(q)),
     ).slice(0, 10);
   }, [debouncedSearch]);
 
   // 计算 ego 网络
   const egoData = useMemo(() => {
+  
     if (!centerId) return null;
 
     // 一度关系（直接人物关系）
@@ -198,7 +203,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
       center: centerNode
         ? {
             id: centerNode.id,
-            title: centerNode.title,
+            title: nt(centerNode),
             type: centerNode.type,
             yearDisplay: centerNode.yearDisplay,
             eraId: centerNode.eraId,
@@ -246,11 +251,12 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
 
     const firstNodes: EgoLayoutNode[] = [];
     (egoData?.firstDegree ?? []).forEach((e, i) => {
+  
       const angle = (2 * Math.PI * i) / (egoData?.firstDegree.length ?? 1) - Math.PI / 2;
       const node = getNodeById(e.to);
       firstNodes.push({
         id: e.to,
-        title: node?.title ?? e.to,
+        title: nt(node) ?? e.to,
         yearDisplay: node?.yearDisplay,
         x: cx + firstRadius * Math.cos(angle),
         y: cy + firstRadius * Math.sin(angle),
@@ -261,11 +267,12 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
     const secondNodes: EgoLayoutNode[] = [];
     if (showSecondDegree) {
       (egoData?.secondDegree ?? []).forEach((e, i) => {
+  
         const angle = (2 * Math.PI * i) / (egoData?.secondDegree.length ?? 1) - Math.PI / 2;
         const node = getNodeById(e.to);
         secondNodes.push({
           id: e.to,
-          title: node?.title ?? e.to,
+          title: nt(node) ?? e.to,
           yearDisplay: node?.yearDisplay,
           x: cx + secondRadius * Math.cos(angle),
           y: cy + secondRadius * Math.sin(angle),
@@ -325,7 +332,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
                   >
                     <User className="size-4 text-muted-foreground" />
                     <div className="min-w-0 flex-1">
-                      <div className="truncate font-medium">{n.title}</div>
+                      <div className="truncate font-medium">{nt(n)}</div>
                       <div className="truncate text-xs text-muted-foreground">
                         {n.yearDisplay}
                       </div>
@@ -392,7 +399,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
         </button>
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-bold font-display">
-            {centerNode?.title} 的关系网
+            {nt(centerNode)} 的关系网
           </div>
           <div className="truncate text-[11px] text-muted-foreground">
             {firstDegreeCount} 位直接关系
@@ -516,13 +523,14 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
                   fill="var(--muted-foreground)"
                   opacity={0.7}
                 >
-                  {sn.title.length > 4 ? sn.title.slice(0, 4) : sn.title}
+                  {smartTrim(nt(sn), 4)}
                 </text>
               </g>
             ))}
 
           {/* 一度节点 */}
           {layout.first.map((fn, i) => {
+  
             const color =
               RELATION_CATEGORY_COLORS[fn.edge.relationCategory] ?? '#95a5a6';
             return (
@@ -540,7 +548,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
                   fill="var(--foreground)"
                   fontWeight="600"
                 >
-                  {fn.title.length > 5 ? fn.title.slice(0, 5) : fn.title}
+                  {smartTrim(nt(fn), 5)}
                 </text>
                 <title>{fn.edge.label}</title>
               </g>
@@ -563,7 +571,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
               fill="var(--primary-foreground)"
               fontWeight="bold"
             >
-              {centerNode?.title?.slice(0, 4) ?? '中心'}
+              {nt(centerNode)?.slice(0, 4) ?? '中心'}
             </text>
             <title>点击查看详情</title>
           </g>
@@ -577,6 +585,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
         </div>
         <div className="grid grid-cols-2 gap-1.5 md:grid-cols-3">
           {firstEdges.map((e) => {
+  
             const node = getNodeById(e.to);
             if (!node) return null;
             const color = RELATION_CATEGORY_COLORS[e.relationCategory] ?? '#95a5a6';
@@ -590,7 +599,7 @@ export default function PersonEgoGraph({ store, onBack }: PersonEgoGraphProps) {
                   className="size-1.5 shrink-0 rounded-full"
                   style={{ backgroundColor: color }}
                 />
-                <span className="truncate font-medium">{node.title}</span>
+                <span className="truncate font-medium">{nt(node)}</span>
                 <Badge variant="outline" className="ml-auto shrink-0 text-[9px] px-1 py-0">
                   {e.relationCategory}
                 </Badge>

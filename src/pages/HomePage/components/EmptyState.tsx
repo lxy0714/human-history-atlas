@@ -13,7 +13,7 @@ export default function EmptyState({
   title,
   description,
 }: EmptyStateProps) {
-  const { t } = useI18n();
+  const { t, nt } = useI18n();
 
   const PRESETS: Record<string, { icon: typeof SearchX; title: string; desc: string }> = {
     search: {
@@ -40,7 +40,7 @@ export default function EmptyState({
 
   const preset = PRESETS[type] ?? PRESETS.search;
   const Icon = preset.icon;
-  const displayTitle = title ?? preset.title;
+  const displayTitle = title ?? nt(preset);
   const displayDesc = description ?? preset.desc;
 
   return (

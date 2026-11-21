@@ -18,6 +18,7 @@ const CIVILIZATION_START = -4000;
 const MAX_YEAR = 2026;
 
 function pctToYear(pct: number): number {
+  
   if (pct <= PREHISTORY_PCT) {
     const t = pct / PREHISTORY_PCT;
     return PREHISTORY_START + t * (CIVILIZATION_START - PREHISTORY_START);
@@ -27,6 +28,7 @@ function pctToYear(pct: number): number {
 }
 
 function yearToPct(year: number): number {
+  
   if (year <= CIVILIZATION_START) {
     const t = (year - PREHISTORY_START) / (CIVILIZATION_START - PREHISTORY_START);
     return Math.max(0, Math.min(1, t * PREHISTORY_PCT));
@@ -38,7 +40,7 @@ function yearToPct(year: number): number {
 import { formatYear } from './utils';
 
 export default memo(function TimeSlider({ store }: TimeSliderProps) {
-  const { t } = useI18n();
+  const { t, ln } = useI18n();
   const {
     timeRange,
     setTimeRange,
@@ -211,7 +213,7 @@ export default memo(function TimeSlider({ store }: TimeSliderProps) {
                 width: `${era.endPct - era.startPct}%`,
                 backgroundColor: `${era.accent}40`,
               }}
-              title={era.name}
+              title={ln(era)}
             />
           ))}
         </div>
@@ -299,6 +301,7 @@ export default memo(function TimeSlider({ store }: TimeSliderProps) {
       {/* 移动端关键刻度标签（只显示前5个时代的缩写） */}
       <div className="pointer-events-none absolute -bottom-3 left-0 right-0 hidden md:block">
         {eraTicks.map((era) => {
+  
           const midPct = (era.startPct + era.endPct) / 2;
           // 只显示宽度 > 8% 的时代标签
           const eraWidth = era.endPct - era.startPct;
@@ -309,7 +312,7 @@ export default memo(function TimeSlider({ store }: TimeSliderProps) {
               className="absolute -translate-x-1/2 whitespace-nowrap text-[9px] text-muted-foreground/70"
               style={{ left: `${midPct}%`, top: '100%' }}
             >
-              {era.name.length > 4 ? era.name.slice(0, 4) : era.name}
+              {ln(era).length > 4 ? ln(era).slice(0, 4) : ln(era)}
             </div>
           );
         })}
@@ -346,7 +349,7 @@ export default memo(function TimeSlider({ store }: TimeSliderProps) {
               className="truncate text-sm font-bold font-serif"
               style={{ color: currentEra.accent }}
             >
-              {currentEra.name}
+              {ln(currentEra)}
             </p>
             <p className="truncate text-[11px] text-muted-foreground tabular-nums">
               {formatYear(timeRange[0], { maxYear: MAX_YEAR })} ~ {formatYear(timeRange[1], { maxYear: MAX_YEAR })}
@@ -414,7 +417,7 @@ export default memo(function TimeSlider({ store }: TimeSliderProps) {
             className="text-sm font-bold"
             style={{ color: currentEra.accent, fontFamily: 'var(--font-display)' }}
           >
-            {currentEra.name}
+            {ln(currentEra)}
           </p>
         </div>
 

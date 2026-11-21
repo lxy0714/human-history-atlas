@@ -2,6 +2,7 @@
 
 import { BookOpen } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useI18n } from '@/i18n';
 
 export interface RelatedPathItem {
   id: string;
@@ -19,6 +20,7 @@ export default function DetailRelatedPaths({
   relatedPaths,
   civColor,
 }: DetailRelatedPathsProps) {
+  const { nt } = useI18n();
   if (relatedPaths.length === 0) return null;
 
   return (
@@ -38,7 +40,7 @@ export default function DetailRelatedPaths({
               <span className="text-xl">{path.icon}</span>
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-semibold font-serif">
-                  {path.title}
+                  {nt(path)}
                 </div>
                 <div className="text-[11px] text-muted-foreground">
                   {path.subtitle}

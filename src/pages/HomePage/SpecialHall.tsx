@@ -278,7 +278,7 @@ interface SpecialHallProps {
 }
 
 export default memo(function SpecialHall({ store }: SpecialHallProps) {
-  const { t, lang } = useI18n();
+  const { t, nt } = useI18n();
   const progress = useLearningProgress();
   const achievements = useAchievements();
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
@@ -328,6 +328,7 @@ export default memo(function SpecialHall({ store }: SpecialHallProps) {
             {/* 卡片网格 */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {TOPICS.map((topic, i) => {
+  
                   const Icon = topic.icon;
                   const isFav = topic.id === 'favorites';
                   const isEmpty = isFav && favoriteCount === 0;
@@ -358,7 +359,7 @@ export default memo(function SpecialHall({ store }: SpecialHallProps) {
                       style={{ color: '#D4A843' }}
                     />
                     <h3 className="mb-2 text-[16px] font-bold font-display leading-snug">
-                      {topic.title}
+                      {nt(topic)}
                     </h3>
                     <p className="line-clamp-2 text-[12px] leading-[1.6] text-foreground/60">
                       {isFav
@@ -427,7 +428,7 @@ export default memo(function SpecialHall({ store }: SpecialHallProps) {
                     style={{ color: activeInfo.color }}
                   />
                   <h2 className="text-sm font-bold font-serif md:text-lg">
-                    {activeInfo.title}
+                    {nt(activeInfo)}
                   </h2>
                 </div>
               )}

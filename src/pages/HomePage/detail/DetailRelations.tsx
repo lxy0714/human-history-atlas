@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { CIVILIZATIONS } from '@/data/history-index';
 import type { IHistoryNodeIndex } from '@/data/history-index';
 import { RELATION_TYPES, type RelationType } from '@/data/relations';
+import { useI18n } from '@/i18n';
 
 type RelationGroupKey = RelationType | 'related';
 
@@ -37,6 +38,7 @@ export default function DetailRelations({
   onScrollToNode,
   onOpenGraph,
 }: DetailRelationsProps) {
+  const { nt } = useI18n();
   if (!hasAnyRelation) return null;
 
   return (
@@ -76,6 +78,7 @@ export default function DetailRelations({
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {arr.slice(0, 8).map(({ node, label }) => {
+  
                     const nc = CIVILIZATIONS[node.civilization]?.color ?? '#888';
                     return (
                       <button
@@ -89,7 +92,7 @@ export default function DetailRelations({
                           style={{ backgroundColor: nc }}
                         />
                         <span className="truncate text-foreground/90 group-hover:text-foreground">
-                          {node.title}
+                          {nt(node)}
                         </span>
                         <span className="text-[9px] text-muted-foreground">
                           · {label.length > 8 ? label.slice(0, 7) + '…' : label}

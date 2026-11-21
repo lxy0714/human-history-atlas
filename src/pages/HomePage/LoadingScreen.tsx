@@ -15,10 +15,12 @@ interface LoadingScreenProps {
  */
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const { t } = useI18n();
+  
   const [showProgress, setShowProgress] = useState(false);
 
   // 超过 1.8s 还在加载，显示"正在展开历史画卷"提示
   useEffect(() => {
+  
     const t = setTimeout(() => setShowProgress(true), 1800);
     return () => clearTimeout(t);
   }, []);
@@ -112,7 +114,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                   letterSpacing: '0.08em',
                 }}
               >
-                {t('loading.title', '全球历史全景')}
+                {t('nt(loading)', '全球历史全景')}
               </div>
               <div
                 className="mt-3 text-sm tracking-[0.3em] md:text-base"

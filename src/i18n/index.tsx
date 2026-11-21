@@ -1,8 +1,8 @@
-// EXPORTS: useI18n, I18nProvider
+// EXPORTS: useI18n, I18nProvider, lookup, pickLocalizedName, pickNodeField
 // i18n 核心：React Context + Provider + useI18n hook
 // 设计目标：
 //   - 中文默认态零额外语言包文件（首屏体积不变）
-//   - 英文语言包动态 import，按需加载
+//   - 英文语言包与英文节点元数据动态 import，按需加载
 //   - 切换即时生效，不需刷新
 //   - 持久化到 scopedStorage
 
@@ -44,11 +44,58 @@ function makeTranslator(dict: I18nDict | null) {
 
 // —— Context ——
 
+/** 可被 nt/ns 取值的对象形状：只要求可能带 id 与 title/summary */
+export interface LocalizableNode {
+  id?: string;
+  title?: string;
+  summary?: string;
+}
+
+/** 英文节点元数据表形状（与 EN_NODE_META 一致，此处只做类型约束避免运行时循环依赖） */
+export type NodeMetaMap = Record<string, { titleEn?: string; summaryEn?: string }>;
+
 interface I18nContextValue {
   lang: I18nLang;
   setLang: (lang: I18nLang) => void;
   t: (key: string, fallback: string) => string;
+  /** 取本地化名称：英文态优先 nameEn，缺失回退中文 name。用于 ERAS / CATEGORIES / CIVILIZATIONS */
+  ln: (entry: { name: string; nameEn?: string } | undefined | null, fallback?: string) => string;
+  /** 取节点标题：英文态查 EN_NODE_META.titleEn，未译或非节点对象原样返回 */
+  nt: (node: LocalizableNode | undefined | null) => string;
+  /** 取节点摘要：英文态查 EN_NODE_META.summaryEn，未译或非节点对象原样返回 */
+  ns: (node: LocalizableNode | undefined | null) => string;
   isLoading: boolean; // 切换语言时加载包的短暂 loading 态
+}
+
+/** ln() 纯函数实现，便于单测 */
+export function pickLocalizedName(
+  lang: I18nLang,
+  entry: { name: string; nameEn?: string } | undefined | null,
+  fallback = '',
+): string {
+  if (!entry) return fallback;
+  if (lang !== 'zh-CN' && entry.nameEn) return entry.nameEn;
+  return entry.name ?? fallback;
+}
+
+/**
+ * nt()/ns() 纯函数实现，便于单测。
+ *
+ * 关键设计：按 id 查表。传入的对象若不是历史节点（没有 id，或 id 不在英文表里），
+ * 一律原样返回它自己的 title/summary。这让全站批量接线是安全的——
+ * 成就、路径、词典条目等同名 .title 字段不会被误伤。
+ */
+export function pickNodeField(
+  lang: I18nLang,
+  metaMap: NodeMetaMap | null,
+  node: LocalizableNode | undefined | null,
+  field: 'title' | 'summary',
+): string {
+  const original = node?.[field] ?? '';
+  if (lang === 'zh-CN' || !metaMap || !node?.id) return original;
+  const meta = metaMap[node.id];
+  const translated = field === 'title' ? meta?.titleEn : meta?.summaryEn;
+  return translated || original;
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null);
@@ -81,6 +128,27 @@ async function loadDict(lang: I18nLang): Promise<I18nDict | null> {
   return promise;
 }
 
+// 英文节点元数据：同样按需加载，中文首屏不背这个体积
+let nodeMetaCache: NodeMetaMap | null = null;
+let nodeMetaPromise: Promise<NodeMetaMap | null> | null = null;
+
+async function loadNodeMeta(lang: I18nLang): Promise<NodeMetaMap | null> {
+  if (lang === 'zh-CN') return null;
+  if (nodeMetaCache) return nodeMetaCache;
+  if (nodeMetaPromise) return nodeMetaPromise;
+  nodeMetaPromise = import('@/data/i18n/en-node-meta')
+    .then((mod) => {
+      nodeMetaCache = mod.EN_NODE_META as NodeMetaMap;
+      nodeMetaPromise = null;
+      return nodeMetaCache;
+    })
+    .catch(() => {
+      nodeMetaPromise = null;
+      return null;
+    });
+  return nodeMetaPromise;
+}
+
 // —— 初始语言判定 ——
 
 function getInitialLang(): I18nLang {
@@ -98,25 +166,34 @@ function getInitialLang(): I18nLang {
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<I18nLang>(() => getInitialLang());
   const [dict, setDict] = useState<I18nDict | null>(null);
+  const [nodeMeta, setNodeMeta] = useState<NodeMetaMap | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 首次挂载：若非中文，加载对应语言包
+  // 首次挂载：若非中文，并行加载语言包与英文节点元数据
   useEffect(() => {
     let cancelled = false;
     if (lang === 'zh-CN') {
       setDict(null);
+      setNodeMeta(null);
       return;
     }
     setIsLoading(true);
-    loadDict(lang).then((d) => {
+    Promise.all([loadDict(lang), loadNodeMeta(lang)]).then(([d, m]) => {
       if (!cancelled) {
         setDict(d);
+        setNodeMeta(m);
         setIsLoading(false);
       }
     });
     return () => {
       cancelled = true;
     };
+  }, [lang]);
+
+  // 同步 <html lang>：读屏、断词、字体回退都依赖它
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.documentElement.lang = lang === 'zh-CN' ? 'zh-CN' : 'en';
   }, [lang]);
 
   const setLang = useCallback((newLang: I18nLang) => {
@@ -126,9 +203,25 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const t = useMemo(() => makeTranslator(dict), [dict]);
 
+  const ln = useMemo(
+    () => (entry: { name: string; nameEn?: string } | undefined | null, fallback = '') =>
+      pickLocalizedName(lang, entry, fallback),
+    [lang],
+  );
+
+  const nt = useMemo(
+    () => (node: LocalizableNode | undefined | null) => pickNodeField(lang, nodeMeta, node, 'title'),
+    [lang, nodeMeta],
+  );
+
+  const ns = useMemo(
+    () => (node: LocalizableNode | undefined | null) => pickNodeField(lang, nodeMeta, node, 'summary'),
+    [lang, nodeMeta],
+  );
+
   const value = useMemo<I18nContextValue>(
-    () => ({ lang, setLang, t, isLoading }),
-    [lang, setLang, t, isLoading],
+    () => ({ lang, setLang, t, ln, nt, ns, isLoading }),
+    [lang, setLang, t, ln, nt, ns, isLoading],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
@@ -144,6 +237,10 @@ export function useI18n() {
       lang: 'zh-CN' as I18nLang,
       setLang: () => {},
       t: (_key: string, fallback: string) => fallback,
+      ln: (entry: { name: string; nameEn?: string } | undefined | null, fallback = '') =>
+        entry?.name ?? fallback,
+      nt: (node: LocalizableNode | undefined | null) => node?.title ?? '',
+      ns: (node: LocalizableNode | undefined | null) => node?.summary ?? '',
       isLoading: false,
     };
   }

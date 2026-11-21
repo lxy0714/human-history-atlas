@@ -7,12 +7,14 @@ import { Lightbulb, ArrowRight, Sparkles } from 'lucide-react';
 import { INVENTION_NODES, INVENTION_CATEGORIES } from '@/data/specials/inventions';
 
 import type { HistoryState } from '../useHistoryStore';
+import { useI18n } from '@/i18n';
 
 interface InventionsTimelineProps {
   store: HistoryState;
 }
 
 export default function InventionsTimeline({ store }: InventionsTimelineProps) {
+  const { nt } = useI18n();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -92,6 +94,7 @@ export default function InventionsTimeline({ store }: InventionsTimelineProps) {
             <div className="absolute left-4 right-4 top-1/2 h-0.5 -translate-y-1/2 bg-gradient-to-r from-transparent via-border to-transparent" />
 
             {filtered.map((node, i) => {
+  
               const info = catInfo(node.category);
               const isSelected = selectedId === node.id;
               return (
@@ -121,7 +124,7 @@ export default function InventionsTimeline({ store }: InventionsTimelineProps) {
                       }
                     >
                       <div className="mb-1 text-2xl">{info.icon}</div>
-                      <p className="text-xs font-semibold font-serif">{node.title}</p>
+                      <p className="text-xs font-semibold font-serif">{nt(node)}</p>
                       <p className="mt-0.5 text-[10px] text-muted-foreground">
                         {node.yearDisplay}
                       </p>
@@ -163,7 +166,7 @@ export default function InventionsTimeline({ store }: InventionsTimelineProps) {
                       }
                     >
                       <div className="mb-1 text-2xl">{info.icon}</div>
-                      <p className="text-xs font-semibold font-serif">{node.title}</p>
+                      <p className="text-xs font-semibold font-serif">{nt(node)}</p>
                       <p className="mt-0.5 text-[10px] text-muted-foreground">
                         {node.yearDisplay}
                       </p>
@@ -199,7 +202,7 @@ export default function InventionsTimeline({ store }: InventionsTimelineProps) {
                   {catInfo(selected.category).icon}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-lg font-bold font-serif">{selected.title}</h3>
+                  <h3 className="text-lg font-bold font-serif">{nt(selected)}</h3>
                   <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                     <span>{selected.yearDisplay}</span>
                     <span>·</span>

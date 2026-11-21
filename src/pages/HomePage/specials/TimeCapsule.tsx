@@ -1,5 +1,6 @@
 // EXPORTS: TimeCapsule
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { useI18n } from '@/i18n';
 import { motion } from 'framer-motion';
 import { Clock, Globe, ChevronRight } from 'lucide-react';
 import { HISTORY_NODES_INDEX, CIVILIZATIONS, ERAS, type IHistoryNodeIndex } from '@/data/history-index';
@@ -38,6 +39,7 @@ function yearToSlider(year: number): number {
 }
 
 export default function TimeCapsule({ store }: TimeCapsuleProps) {
+  const { ln, nt } = useI18n();
   const [year, setYear] = useState(1000);
   const [sliderVal, setSliderVal] = useState(() => yearToSlider(1000));
   const inputRef = useRef<HTMLInputElement>(null);
@@ -103,7 +105,7 @@ export default function TimeCapsule({ store }: TimeCapsuleProps) {
           {year < 0 ? `前 ${Math.abs(year)}` : year}
         </div>
         <p className="text-sm text-muted-foreground">
-          {yearDisplay} · {yearsAgo(year)} · {era.name}
+          {yearDisplay} · {yearsAgo(year)} · {ln(era)}
         </p>
       </motion.div>
 
@@ -221,6 +223,7 @@ export default function TimeCapsule({ store }: TimeCapsuleProps) {
                   <ScrollArea className="max-h-64">
                     <div className="divide-y divide-border/30">
                       {nodes.map((n) => {
+  
                         const [s, e] = getNodeTimeRange(n);
                         const sStr = formatYear(s);
                         const eStr = formatYear(e);
@@ -231,7 +234,7 @@ export default function TimeCapsule({ store }: TimeCapsuleProps) {
                             className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-accent/30"
                           >
                             <div className="min-w-0 flex-1">
-                              <p className="text-sm font-medium font-serif">{n.title}</p>
+                              <p className="text-sm font-medium font-serif">{nt(n)}</p>
                               <p className="text-[11px] text-muted-foreground">
                                 {sStr} ~ {eStr} · {n.type === 'person' ? '人物' : n.type === 'dynasty' ? '朝代' : n.type === 'artifact' ? '文物' : '事件'}
                               </p>

@@ -13,6 +13,7 @@ import { LEARNING_PATHS, type ILearningPath } from '@/data/learning-paths';
 import { NODE_KEY_POINTS } from '@/data/key-points';
 import { ALL_HISTORY_NODES_INDEX } from '@/data/history-index';
 import { useAchievements } from '../useAchievements';
+import { useI18n } from '@/i18n';
 
 interface PathDetailProps {
   path: ILearningPath;
@@ -41,6 +42,7 @@ function getTypeShape(type?: string): string {
 }
 
 export default function PathDetail({ path, store, progress, onBack }: PathDetailProps) {
+  const { nt } = useI18n();
   const [currentChapterIdx, setCurrentChapterIdx] = useState(0);
   const achievements = useAchievements();
   const pathPercent = progress.getPathPercent(path);
@@ -107,7 +109,7 @@ export default function PathDetail({ path, store, progress, onBack }: PathDetail
             {path.icon}
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="text-lg font-bold font-display md:text-xl">{path.title}</h2>
+            <h2 className="text-lg font-bold font-display md:text-xl">{nt(path)}</h2>
             <p className="mt-0.5 text-xs text-muted-foreground md:text-sm">
               {path.subtitle}
             </p>
@@ -149,7 +151,7 @@ export default function PathDetail({ path, store, progress, onBack }: PathDetail
             第 {currentChapterIdx + 1} / {path.chapters.length} 章
           </div>
           <div className="text-sm font-semibold font-display">
-            {currentChapter?.title}
+            {nt(currentChapter)}
           </div>
         </div>
         <Button
@@ -190,6 +192,7 @@ export default function PathDetail({ path, store, progress, onBack }: PathDetail
         />
 
         {currentChapter?.nodeIds.map((nodeId, idx) => {
+  
           const node = getNodeById(nodeId);
           if (!node) return null;
           const isMastered = progress.isMastered(nodeId);
@@ -235,7 +238,7 @@ export default function PathDetail({ path, store, progress, onBack }: PathDetail
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <h4 className="truncate text-sm font-semibold">{node.title}</h4>
+                      <h4 className="truncate text-sm font-semibold">{nt(node)}</h4>
                       {isMastered && (
                         <Badge variant="default" className="shrink-0 text-[10px] h-4 px-1">
                           已掌握
@@ -294,6 +297,7 @@ export default function PathDetail({ path, store, progress, onBack }: PathDetail
         </h3>
         <div className="space-y-2">
           {path.chapters.map((ch, idx) => {
+  
             const percent = progress.getChapterPercent(path.id, ch.nodeIds);
             return (
               <button
@@ -315,7 +319,7 @@ export default function PathDetail({ path, store, progress, onBack }: PathDetail
                   {idx + 1}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate font-medium">{ch.title}</div>
+                  <div className="truncate font-medium">{nt(ch)}</div>
                 </div>
                 <div className="text-right">
                   <div className="tabular-nums text-[11px] text-muted-foreground">

@@ -1,5 +1,6 @@
 // EXPORTS: HomePage
 import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
+import { useI18n } from '@/i18n';
 import { AppEvents } from './app-events';
 import { formatYear } from './utils';
 import { toast } from 'sonner';
@@ -38,6 +39,7 @@ export default function HomePage() {
 }
 
 function HomePageInner() {
+  const { ln } = useI18n();
   const store = useHistoryStore();
   const { viewMode, currentEra, isPlaying, playEraCardVisible, setViewMode, openDetail, loadError, retryLoad } = store;
   const [projectorOpen, setProjectorOpen] = useState(false);
@@ -230,13 +232,13 @@ function HomePageInner() {
                   fontFamily: 'var(--font-display)',
                 }}
               >
-                {currentEra.name}
+                {ln(currentEra)}
               </div>
               <h2
                 className="mb-2 text-2xl font-black tracking-wide font-serif"
                 style={{ color: currentEra.accent }}
               >
-                {currentEra.name}
+                {ln(currentEra)}
               </h2>
               <p className="mb-3 text-xs text-muted-foreground">
                 {formatYear(currentEra.startYear, { compact: false, useGrouping: true })}

@@ -7,12 +7,14 @@ import { HISTORY_NODES_INDEX } from '@/data/history-index';
 import type { HistoryState } from '../useHistoryStore';
 import { Badge } from '@/components/ui/badge';
 import { formatYear } from '../utils';
+import { useI18n } from '@/i18n';
 
 interface OnThisDayProps {
   store: HistoryState;
 }
 
 export default function OnThisDay({ store }: OnThisDayProps) {
+  const { nt, ns } = useI18n();
   const today = useMemo(() => new Date(), []);
   const month = today.getMonth() + 1;
   const day = today.getDate();
@@ -77,7 +79,7 @@ export default function OnThisDay({ store }: OnThisDayProps) {
           <div className="space-y-2">
             {todayEvents.map((event, i) => (
               <motion.div
-                key={`${event.year}-${event.title}`}
+                key={`${event.year}-${nt(event)}`}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.1 }}
@@ -108,7 +110,7 @@ export default function OnThisDay({ store }: OnThisDayProps) {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="mb-1 flex items-center gap-2">
-                      <h4 className="font-bold font-serif">{event.title}</h4>
+                      <h4 className="font-bold font-serif">{nt(event)}</h4>
                       <Badge variant="outline" className="h-5 shrink-0 px-1.5 text-[10px]">
                         {event.category}
                       </Badge>
@@ -159,10 +161,10 @@ export default function OnThisDay({ store }: OnThisDayProps) {
             >
               <div className="mb-1 text-[10px] text-primary">{node.yearDisplay}</div>
               <h4 className="mb-1 text-xs font-semibold font-serif line-clamp-2">
-                {node.title}
+                {nt(node)}
               </h4>
               <p className="text-[10px] text-muted-foreground line-clamp-2">
-                {node.summary}
+                {ns(node)}
               </p>
             </motion.button>
           ))}

@@ -83,7 +83,7 @@ function createDivIcon(color: string, important: boolean) {
 }
 
 export default memo(function MapView({ store }: MapViewProps) {
-  const { t, lang } = useI18n();
+  const { t, ln, nt, ns } = useI18n();
   const {
     filteredNodes,
     openDetail,
@@ -238,6 +238,7 @@ export default memo(function MapView({ store }: MapViewProps) {
     const clusters = clusterNodes(validNodes, 0);
 
     clusters.forEach((group) => {
+  
       if (group.count === 1) {
         // 单节点：沿用原有标记样式
         const node = group.nodes[0];
@@ -259,7 +260,7 @@ export default memo(function MapView({ store }: MapViewProps) {
         if (!isMobile) {
           marker.bindTooltip(
             `<div style="font-size: 12px; line-height: 1.4;">
-              <div style="font-weight: 600; margin-bottom: 2px;">${node.title}</div>
+              <div style="font-weight: 600; margin-bottom: 2px;">${nt(node)}</div>
               <div style="color: #c9a96e; font-size: 11px;">${node.yearDisplay}</div>
             </div>`,
             {
@@ -293,7 +294,7 @@ export default memo(function MapView({ store }: MapViewProps) {
               <div style="font-weight: 600; margin-bottom: 4px; color: ${group.primaryColor};">
                 ${group.count} ${t('map.nodesHere', '个历史节点在此处')}
               </div>
-              ${preview.map((n) => `<div style="color: #e8dcc4;">· ${n.title} <span style="color: #c9a96e; font-size: 10px;">(${n.yearDisplay})</span></div>`).join('')}
+              ${preview.map((n) => `<div style="color: #e8dcc4;">· ${nt(n)} <span style="color: #c9a96e; font-size: 10px;">(${n.yearDisplay})</span></div>`).join('')}
               ${more > 0 ? `<div style="color: #888; margin-top: 2px; font-size: 11px;">${t('map.moreNodes', '还有').replace('{n}', String(more))}...</div>` : ''}
               <div style="color: #c9a96e; font-size: 10px; margin-top: 4px;">${t('map.clickToList', '点击查看完整列表')}</div>
             </div>
@@ -701,7 +702,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                     color: CIVILIZATIONS[popupNode.civilization]?.color ?? '#888',
                   }}
                 >
-                  {CIVILIZATIONS[popupNode.civilization]?.name ?? popupNode.civilization}
+                  {ln(CIVILIZATIONS[popupNode.civilization], popupNode.civilization)}
                 </Badge>
                 <Button
                   variant="ghost"
@@ -714,12 +715,12 @@ export default memo(function MapView({ store }: MapViewProps) {
                 </Button>
               </div>
 
-              <h3 className="text-base font-bold font-serif">{popupNode.title}</h3>
+              <h3 className="text-base font-bold font-serif">{nt(popupNode)}</h3>
               <p className="mb-3 text-xs text-muted-foreground">
                 {popupNode.yearDisplay}
               </p>
               <p className="mb-4 line-clamp-3 text-sm text-foreground/80">
-                {popupNode.summary}
+                {ns(popupNode)}
               </p>
 
               <div className="mb-3 flex flex-wrap gap-1">
@@ -791,6 +792,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                   {clusterPopup.nodes
                     .sort((a, b) => a.year - b.year)
                     .map((node) => {
+  
                       const civColor = CIVILIZATIONS[node.civilization]?.color ?? '#888';
                       return (
                         <button
@@ -808,10 +810,10 @@ export default memo(function MapView({ store }: MapViewProps) {
                           />
                           <div className="min-w-0 flex-1">
                             <div className="truncate text-sm font-medium text-foreground">
-                              {node.title}
+                              {nt(node)}
                             </div>
                             <div className="text-[11px] text-muted-foreground">
-                              {node.yearDisplay} · {CIVILIZATIONS[node.civilization]?.name ?? node.civilization}
+                              {node.yearDisplay} · {ln(CIVILIZATIONS[node.civilization], node.civilization)}
                             </div>
                           </div>
                         </button>
@@ -858,6 +860,7 @@ export default memo(function MapView({ store }: MapViewProps) {
                 {clusterPopup.nodes
                   .sort((a, b) => a.year - b.year)
                   .map((node) => {
+  
                     const civColor = CIVILIZATIONS[node.civilization]?.color ?? '#888';
                     return (
                       <button
@@ -875,10 +878,10 @@ export default memo(function MapView({ store }: MapViewProps) {
                         />
                         <div className="min-w-0 flex-1">
                           <div className="truncate text-sm font-medium text-foreground">
-                            {node.title}
+                            {nt(node)}
                           </div>
                           <div className="text-[11px] text-muted-foreground">
-                            {node.yearDisplay} · {CIVILIZATIONS[node.civilization]?.name ?? node.civilization}
+                            {node.yearDisplay} · {ln(CIVILIZATIONS[node.civilization], node.civilization)}
                           </div>
                         </div>
                       </button>

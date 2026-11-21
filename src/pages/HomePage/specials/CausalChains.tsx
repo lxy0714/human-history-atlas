@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useI18n } from '@/i18n';
 import { ArrowRight, ArrowLeft, Link, History } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -274,6 +275,7 @@ interface CausalChainsProps {
 }
 
 export default function CausalChains({ store }: CausalChainsProps) {
+  const { ln, nt } = useI18n();
   const [activeChain, setActiveChain] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const { scrollToNode } = store;
@@ -308,7 +310,7 @@ export default function CausalChains({ store }: CausalChainsProps) {
                 style={{ backgroundColor: c.color }}
               />
               <div className="mb-2 text-2xl">{c.icon}</div>
-              <h3 className="mb-1 text-sm font-semibold">{c.title}</h3>
+              <h3 className="mb-1 text-sm font-semibold">{nt(c)}</h3>
               <p className="text-xs text-muted-foreground">{c.description}</p>
               <div className="mt-3 flex items-center gap-1">
                 {c.nodes.slice(0, 5).map((n, idx) => {
@@ -347,7 +349,7 @@ export default function CausalChains({ store }: CausalChainsProps) {
           返回
         </Button>
         <div>
-          <h2 className="text-lg font-bold font-serif">{chain?.title}</h2>
+          <h2 className="text-lg font-bold font-serif">{nt(chain)}</h2>
           <p className="text-xs text-muted-foreground">{chain?.description}</p>
         </div>
       </div>
@@ -355,6 +357,7 @@ export default function CausalChains({ store }: CausalChainsProps) {
       <ScrollArea className="w-full">
         <div className="flex min-w-max items-center gap-2 px-2 pb-4">
           {chain?.nodes.map((node, idx) => {
+  
             const nd = findNodeById(node.id);
             if (!nd) return null;
             const nc = CIVILIZATIONS[nd.civilization]?.color ?? '#888';
@@ -375,7 +378,7 @@ export default function CausalChains({ store }: CausalChainsProps) {
                     {nd.yearDisplay}
                   </div>
                   <div className="line-clamp-2 text-xs font-medium text-foreground">
-                    {nd.title}
+                    {nt(nd)}
                   </div>
                   <div className="mt-2 flex items-center gap-1">
                     <span
@@ -383,7 +386,7 @@ export default function CausalChains({ store }: CausalChainsProps) {
                       style={{ backgroundColor: nc }}
                     />
                     <span className="truncate text-[9px] text-muted-foreground">
-                      {CIVILIZATIONS[nd.civilization]?.name ?? nd.civilization}
+                      {ln(CIVILIZATIONS[nd.civilization], nd.civilization)}
                     </span>
                   </div>
                 </motion.button>

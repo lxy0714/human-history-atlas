@@ -1,5 +1,6 @@
 // EXPORTS: CivilizationCompare
 import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useI18n } from '@/i18n';
 import { Search, X, Sparkles, Scale, Clock, MapPin, Tag, Link2, AlertCircle, Check, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -15,6 +16,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import CivilBadge from '@/components/ui/civil-badge';
 import { useDebouncedValue } from '@/utils/use-performance';
 import { renderInlineMarkdown } from '@/lib/markdown-render';
+import { smartTrim, bilingualHaystack } from '@/i18n/text';
 
 const PRESETS = [
   { id: 'han-rome', leftId: 'han-dynasty', rightId: 'roman-empire', label: '汉 vs 罗马' },
@@ -40,6 +42,7 @@ interface NodePickerProps {
 }
 
 function NodePicker({ label, value, onChange, color, disabledId }: NodePickerProps) {
+  const { t, ln, nt, ns } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, 180);
@@ -55,12 +58,13 @@ function NodePicker({ label, value, onChange, color, disabledId }: NodePickerPro
   const filteredNodes = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
     return ALL_HISTORY_NODES_INDEX.filter((n) => {
+  
       if (!n) return false;
       // 搜索
       if (q) {
-        const matchTitle = n.title.toLowerCase().includes(q);
+        const matchTitle = bilingualHaystack(n.title, nt(n)).toLowerCase().includes(q);
         const matchYear = n.yearDisplay.includes(q);
-        const matchSummary = n.summary.toLowerCase().includes(q);
+        const matchSummary = ns(n).toLowerCase().includes(q);
         if (!matchTitle && !matchYear && !matchSummary) return false;
       }
       // 时代筛选
@@ -155,7 +159,7 @@ function NodePicker({ label, value, onChange, color, disabledId }: NodePickerPro
                     : 'border border-border/50 text-muted-foreground hover:border-primary/40 hover:text-foreground'
                 }`}
               >
-                {era.name}
+                {ln(era)}
               </button>
             ))}
           </div>
@@ -228,6 +232,7 @@ function NodePicker({ label, value, onChange, color, disabledId }: NodePickerPro
         ) : (
           <div className="p-1">
             {ERAS.map((era) => {
+  
               const nodes = groupedByEra[era.id];
               if (!nodes || nodes.length === 0) return null;
               return (
@@ -236,10 +241,11 @@ function NodePicker({ label, value, onChange, color, disabledId }: NodePickerPro
                     className="sticky top-0 z-10 px-2 py-1 text-xs font-semibold"
                     style={{ color: era.accent, backgroundColor: 'rgba(20, 16, 12, 0.85)' }}
                   >
-                    {era.name} · {nodes.length}
+                    {ln(era)} · {nodes.length}
                   </div>
                   <div className="space-y-0.5">
                     {nodes.map((node) => {
+  
                       const nc = CIVILIZATIONS[node.civilization]?.color ?? '#888';
                       const nodeType = node.type ?? 'event';
                       const isSelected = value?.id === node.id;
@@ -268,7 +274,7 @@ function NodePicker({ label, value, onChange, color, disabledId }: NodePickerPro
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-1.5">
                               <span className="truncate text-xs font-medium text-foreground">
-                                {node.title}
+                                {nt(node)}
                               </span>
                               <span
                                 className="shrink-0 rounded-sm px-1 text-[9px]"
@@ -281,7 +287,7 @@ function NodePicker({ label, value, onChange, color, disabledId }: NodePickerPro
                               </span>
                             </div>
                             <div className="truncate text-[10px] text-muted-foreground">
-                              {node.yearDisplay} · {CIVILIZATIONS[node.civilization]?.name}
+                              {node.yearDisplay} · {ln(CIVILIZATIONS[node.civilization])}
                             </div>
                           </div>
                           {isSelected && (
@@ -324,9 +330,9 @@ function NodePicker({ label, value, onChange, color, disabledId }: NodePickerPro
               style={{ backgroundColor: civColor, boxShadow: `0 0 6px ${civColor}80` }}
             />
             <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-medium font-serif">{value.title}</div>
+              <div className="truncate text-sm font-medium font-serif">{nt(value)}</div>
               <div className="truncate text-[10px] text-muted-foreground">
-                {valueEra?.name} · {value.yearDisplay} · {CIVILIZATIONS[value.civilization]?.name}
+                {ln(valueEra)} · {value.yearDisplay} · {ln(CIVILIZATIONS[value.civilization])}
               </div>
             </div>
             <button
@@ -493,6 +499,7 @@ interface CivilizationCompareProps {
 }
 
 export default function CivilizationCompare({ store, initialLeftId }: CivilizationCompareProps) {
+  const { nt, ns } = useI18n();
   const [leftNode, setLeftNode] = useState<IHistoryNodeIndex | null>(
     initialLeftId ? ALL_HISTORY_NODES_INDEX.find((n) => n && n.id === initialLeftId) ?? null : null,
   );
@@ -653,7 +660,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                 <span className="text-[11px] text-muted-foreground">A</span>
               </div>
               <h3 className="text-lg font-black font-serif" style={{ color: leftColor }}>
-                {leftNode!.title}
+                {nt(leftNode)}
               </h3>
               <p className="mt-1 text-[11px] text-muted-foreground">
                 {leftCiv?.name} · {formatTypeLabel(leftNode!.type)}
@@ -676,7 +683,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                 <span className="text-[11px] text-muted-foreground">B</span>
               </div>
               <h3 className="text-lg font-black font-serif" style={{ color: rightColor }}>
-                {rightNode!.title}
+                {nt(rightNode)}
               </h3>
               <p className="mt-1 text-[11px] text-muted-foreground">
                 {rightCiv?.name} · {formatTypeLabel(rightNode!.type)}
@@ -704,7 +711,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                   </div>
                   <div className="flex items-start gap-2">
                     <AlertCircle className="mt-0.5 size-3 shrink-0 text-muted-foreground" />
-                    <span className="line-clamp-2">{leftNode!.summary}</span>
+                    <span className="line-clamp-2">{ns(leftNode)}</span>
                   </div>
                 </div>
               </div>
@@ -725,7 +732,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                   </div>
                   <div className="flex items-start gap-2">
                     <AlertCircle className="mt-0.5 size-3 shrink-0 text-muted-foreground" />
-                    <span className="line-clamp-2">{rightNode!.summary}</span>
+                    <span className="line-clamp-2">{ns(rightNode)}</span>
                   </div>
                 </div>
               </div>
@@ -745,8 +752,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                   borderColor: mobileTab === 'left' ? leftColor : undefined,
                 }}
               >
-                A · {leftNode?.title.slice(0, 8)}
-                {leftNode && leftNode.title.length > 8 ? '...' : ''}
+                A · {smartTrim(nt(leftNode), 8)}
               </button>
               <button
                 onClick={() => setMobileTab('right')}
@@ -758,8 +764,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                   borderColor: mobileTab === 'right' ? rightColor : undefined,
                 }}
               >
-                B · {rightNode?.title.slice(0, 8)}
-                {rightNode && rightNode.title.length > 8 ? '...' : ''}
+                B · {smartTrim(nt(rightNode), 8)}
               </button>
             </div>
             <div className="p-4">
@@ -768,7 +773,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                   body={leftBody}
                   loading={leftBodyLoading}
                   error={leftBodyError}
-                  summary={leftNode!.summary}
+                  summary={ns(leftNode)}
                 />
               )}
               {mobileTab === 'right' && (
@@ -776,7 +781,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                   body={rightBody}
                   loading={rightBodyLoading}
                   error={rightBodyError}
-                  summary={rightNode!.summary}
+                  summary={ns(rightNode)}
                 />
               )}
             </div>
@@ -792,7 +797,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                 body={leftBody}
                 loading={leftBodyLoading}
                 error={leftBodyError}
-                summary={leftNode!.summary}
+                summary={ns(leftNode)}
               />
             </div>
             <div className="rounded-xl border border-border/40 bg-card/40 p-4">
@@ -803,7 +808,7 @@ export default function CivilizationCompare({ store, initialLeftId }: Civilizati
                 body={rightBody}
                 loading={rightBodyLoading}
                 error={rightBodyError}
-                summary={rightNode!.summary}
+                summary={ns(rightNode)}
               />
             </div>
           </div>

@@ -30,6 +30,7 @@ import { ALL_HISTORY_NODES_INDEX } from '@/data/history-index';
 import PathDetail from './PathDetail';
 import GlossaryView from './GlossaryView';
 import AchievementPanel from './AchievementPanel';
+import { useI18n } from '@/i18n';
 
 type HallView = 'home' | 'paths' | 'path-detail' | 'glossary' | 'achievements';
 
@@ -41,6 +42,7 @@ interface LearningHallProps {
 }
 
 export default function LearningHall({ store, progress, achievements, onBack }: LearningHallProps) {
+  const { nt } = useI18n();
   const [view, setView] = useState<HallView>('home');
   const [activePathId, setActivePathId] = useState<string | null>(null);
   const [glossaryCategory, setGlossaryCategory] = useState<GlossaryCategory | 'all'>('all');
@@ -333,6 +335,7 @@ export default function LearningHall({ store, progress, achievements, onBack }: 
 
             <div className="grid gap-3 md:grid-cols-2">
               {LEARNING_PATHS.map((path, i) => {
+  
                 const percent = progress.getPathPercent(path);
                 const totalNodes = path.chapters.reduce(
                   (a, ch) => a + ch.nodeIds.length,
@@ -369,7 +372,7 @@ export default function LearningHall({ store, progress, achievements, onBack }: 
                         {path.icon}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="text-sm font-bold font-display">{path.title}</h3>
+                        <h3 className="text-sm font-bold font-display">{nt(path)}</h3>
                         <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
                           {path.description}
                         </p>

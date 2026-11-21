@@ -92,7 +92,7 @@ function SearchBox({
   onSelectResult,
   onToggleFullText,
 }: SearchBoxProps) {
-  const { t } = useI18n();
+  const { t, nt, ns } = useI18n();
   return (
     <div ref={mobile ? undefined : searchRef} className="relative w-full">
       <div className="relative">
@@ -151,14 +151,14 @@ function SearchBox({
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-sm font-medium text-foreground">
-                      {node.title}
+                      {nt(node)}
                     </span>
                     <span className="shrink-0 text-xs text-muted-foreground">
                       {node.yearDisplay}
                     </span>
                   </div>
                   <p className="line-clamp-1 text-xs text-muted-foreground">
-                    {node.summary}
+                    {ns(node)}
                   </p>
                 </button>
               ))}
@@ -230,6 +230,7 @@ export default memo(function Header({ store }: HeaderProps) {
   const handleRandom = useCallback(() => {
     randomExplore();
     setTimeout(() => {
+  
       const node = store.selectedNode;
       if (node) {
         const civ = getCivilizationName(node.civilization as CivilizationKey, lang) || t('header.someCiv', '某文明');

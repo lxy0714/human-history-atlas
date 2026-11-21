@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useI18n } from '@/i18n';
 import { Search, ArrowRight, Shuffle, Zap, Route, Loader2, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ import type { IHistoryNodeIndex } from '@/data/history-index';
 import { useIsMobile } from '@/hooks/use-mobile';
 import type { HistoryState } from '../useHistoryStore';
 import { useDebouncedValue } from '@/utils/use-performance';
+import { bilingualHaystack } from '@/i18n/text';
 
 interface NodeSelectorProps {
   value: string | null;
@@ -19,19 +21,21 @@ interface NodeSelectorProps {
 }
 
 function NodeSelector({ value, onChange, placeholder, excludeId }: NodeSelectorProps) {
+  const { nt, ns } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, 180);
   const node = value ? findNodeById(value) : null;
 
   const filtered = useMemo(() => {
+  
     if (!debouncedQuery.trim()) return ALL_HISTORY_NODES_INDEX.slice(0, 30);
     const q = debouncedQuery.toLowerCase();
     return ALL_HISTORY_NODES_INDEX.filter(
       (n) =>
         n.id !== excludeId &&
-        (n.title.toLowerCase().includes(q) ||
-          n.summary.toLowerCase().includes(q) ||
+        (bilingualHaystack(n.title, nt(n)).toLowerCase().includes(q) ||
+          ns(n).toLowerCase().includes(q) ||
           n.id.toLowerCase().includes(q)),
     ).slice(0, 30);
   }, [debouncedQuery, excludeId]);
@@ -53,7 +57,7 @@ function NodeSelector({ value, onChange, placeholder, excludeId }: NodeSelectorP
               className="size-2 shrink-0 rounded-full"
               style={{ backgroundColor: CIVILIZATIONS[node.civilization]?.color ?? '#888' }}
             />
-            <span className="truncate">{node.title}</span>
+            <span className="truncate">{nt(node)}</span>
             <span className="ml-auto text-[10px] text-muted-foreground">{node.yearDisplay}</span>
           </button>
         ) : (
@@ -97,7 +101,7 @@ function NodeSelector({ value, onChange, placeholder, excludeId }: NodeSelectorP
                     className="size-2 shrink-0 rounded-full"
                     style={{ backgroundColor: CIVILIZATIONS[n.civilization]?.color ?? '#888' }}
                   />
-                  <span className="truncate">{n.title}</span>
+                  <span className="truncate">{nt(n)}</span>
                   <span className="ml-auto text-[10px] text-muted-foreground">
                     {n.yearDisplay}
                   </span>
@@ -124,6 +128,7 @@ interface SixDegreesProps {
 }
 
 export default function SixDegrees({ store }: SixDegreesProps) {
+  const { ln, nt } = useI18n();
   const [fromId, setFromId] = useState<string | null>(null);
   const [toId, setToId] = useState<string | null>(null);
   const [searching, setSearching] = useState(false);
@@ -232,6 +237,7 @@ export default function SixDegrees({ store }: SixDegreesProps) {
 
           <div className="space-y-2">
             {result.path.map((nodeId, idx) => {
+  
               const node = findNodeById(nodeId);
               if (!node) return null;
               const nc = CIVILIZATIONS[node.civilization]?.color ?? '#888';
@@ -257,10 +263,10 @@ export default function SixDegrees({ store }: SixDegreesProps) {
                           className="size-1.5 shrink-0 rounded-full"
                           style={{ backgroundColor: nc }}
                         />
-                        <span className="truncate text-sm font-medium">{node.title}</span>
+                        <span className="truncate text-sm font-medium">{nt(node)}</span>
                       </div>
                       <div className="text-[10px] text-muted-foreground">
-                        {CIVILIZATIONS[node.civilization]?.name ?? node.civilization} · {node.yearDisplay}
+                        {ln(CIVILIZATIONS[node.civilization], node.civilization)} · {node.yearDisplay}
                       </div>
                     </div>
                     <ArrowRight className="size-3 text-muted-foreground" />

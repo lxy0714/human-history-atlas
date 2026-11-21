@@ -7,6 +7,8 @@ import { findNodeById } from '@/data/relations';
 import { CIVILIZATIONS } from '@/data/history-index';
 import { useIsMobile } from '@/hooks/use-mobile';
 import type { HistoryState } from '../useHistoryStore';
+import { useI18n } from '@/i18n';
+import { smartTrim } from '@/i18n/text';
 
 interface LineageNode {
   id: string;
@@ -162,6 +164,7 @@ interface LineageHallProps {
 }
 
 export default function LineageHall({ store }: LineageHallProps) {
+  const { nt } = useI18n();
   const [activeTab, setActiveTab] = useState('philosophy');
   const isMobile = useIsMobile();
   const { scrollToNode } = store;
@@ -199,7 +202,7 @@ export default function LineageHall({ store }: LineageHallProps) {
                   <div className="mb-3 flex items-center gap-2">
                     <span className="text-xl">{chain.icon}</span>
                     <div>
-                      <h3 className="text-sm font-semibold">{chain.title}</h3>
+                      <h3 className="text-sm font-semibold">{nt(chain)}</h3>
                       <p className="text-[11px] text-muted-foreground">
                         {chain.description}
                       </p>
@@ -209,6 +212,7 @@ export default function LineageHall({ store }: LineageHallProps) {
                   {/* 链式图 */}
                   <div className="flex items-start justify-center gap-2 py-2">
                     {chain.nodes.map((node, idx) => {
+  
                       const nd = findNodeById(node.id);
                       if (!nd) return null;
                       const nc = CIVILIZATIONS[nd.civilization]?.color ?? '#888';
@@ -234,12 +238,12 @@ export default function LineageHall({ store }: LineageHallProps) {
                                 }}
                               >
                                 <span className="text-sm">
-                                  {nd.title.slice(0, 2)}
+                                  {nt(nd).slice(0, 2)}
                                 </span>
                               </div>
                               {/* 名称 */}
                               <div className="mt-1.5 max-w-[80px] text-center text-[10px] font-medium text-foreground">
-                                {nd.title.length > 6 ? nd.title.slice(0, 5) + '…' : nd.title}
+                                {smartTrim(nt(nd), 5)}
                               </div>
                               <div className="text-[9px] text-muted-foreground">
                                 {nd.yearDisplay}

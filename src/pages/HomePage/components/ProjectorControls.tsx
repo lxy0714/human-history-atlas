@@ -2,6 +2,7 @@
 // 包含进度条、播放/暂停、上一/下一时代跳转、速度选择、时代跳转点。
 
 import { Play, Pause, SkipBack, SkipForward, RotateCcw, Gauge } from 'lucide-react';
+import { useI18n } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import {
@@ -37,6 +38,7 @@ export default function ProjectorControls({
   onTogglePlay,
   onSpeedChange,
 }: ProjectorControlsProps) {
+  const { ln } = useI18n();
   const currentEraIndex = ERAS.findIndex((e) => e.id === currentEraId);
 
   return (
@@ -141,7 +143,7 @@ export default function ProjectorControls({
                 ? 'text-foreground'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
-            title={`跳转到${era.name}`}
+            title={`跳转到${ln(era)}`}
           >
             <span
               className={`size-2 rounded-full ${
@@ -149,7 +151,7 @@ export default function ProjectorControls({
               }`}
               style={{ backgroundColor: era.accent }}
             />
-            <span className="hidden md:inline">{era.name}</span>
+            <span className="hidden md:inline">{ln(era)}</span>
           </button>
         ))}
       </div>

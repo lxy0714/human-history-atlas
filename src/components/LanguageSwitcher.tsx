@@ -26,7 +26,7 @@ const LANGUAGES: LangOption[] = [
 const PANEL_ID = 'language-switcher-menu';
 
 export default function LanguageSwitcher() {
-  const { lang, setLang, t } = useI18n();
+  const { t, lang, setLang } = useI18n();
   const [open, setOpen] = useState(false);
   const [panelPos, setPanelPos] = useState<{ top: number; left: number } | null>(null);
 
@@ -74,6 +74,7 @@ export default function LanguageSwitcher() {
 
   // 面板就绪后聚焦当前项
   useEffect(() => {
+  
     if (!open) {
       hasFocusedRef.current = false;
       return;
@@ -133,6 +134,7 @@ export default function LanguageSwitcher() {
   }, [open]);
 
   function handleSelect(id: I18nLang) {
+  
     setLang(id);
     setOpen(false);
     triggerRef.current?.focus();
@@ -194,6 +196,7 @@ export default function LanguageSwitcher() {
             </div>
             <div className="flex flex-col pb-1">
               {LANGUAGES.map((l, i) => {
+  
                 const active = l.id === lang;
                 return (
                   <button

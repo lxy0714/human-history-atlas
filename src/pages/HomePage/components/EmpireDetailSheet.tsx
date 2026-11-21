@@ -1,5 +1,6 @@
 // EXPORTS: EmpireDetailSheet
 import { X, MapPin, Calendar, Crown, Link } from 'lucide-react';
+import { useI18n } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CIVILIZATIONS } from '@/data/history-index';
@@ -21,12 +22,13 @@ export default function EmpireDetailSheet({
   onClose,
   onNodeClick,
 }: EmpireDetailSheetProps) {
+  const { ln, nt } = useI18n();
   const isMobile = useIsMobile();
 
   const civColor =
     CIVILIZATIONS[empire?.civilization as keyof typeof CIVILIZATIONS]?.color ?? '#888';
   const civName =
-    CIVILIZATIONS[empire?.civilization as keyof typeof CIVILIZATIONS]?.name ?? '';
+    ln(CIVILIZATIONS[empire?.civilization as keyof typeof CIVILIZATIONS], '');
 
   const relatedNodes = empire
     ? empire.relatedNodeIds
@@ -89,6 +91,7 @@ export default function EmpireDetailSheet({
           </p>
           <div className="space-y-1">
             {relatedNodes.map((node) => {
+  
               if (!node) return null;
               const nodeColor =
                 CIVILIZATIONS[node.civilization as keyof typeof CIVILIZATIONS]?.color ??
@@ -104,7 +107,7 @@ export default function EmpireDetailSheet({
                     style={{ backgroundColor: nodeColor }}
                   />
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-xs font-medium">{node.title}</div>
+                    <div className="truncate text-xs font-medium">{nt(node)}</div>
                     <div className="truncate text-[10px] text-muted-foreground">
                       {node.yearDisplay}
                     </div>

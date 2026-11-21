@@ -1,5 +1,6 @@
 // EXPORTS: FavoritesList
 import { motion, AnimatePresence } from 'framer-motion';
+import { useI18n } from '@/i18n';
 import { Star, X, ArrowLeft, BookmarkX } from 'lucide-react';
 import { HISTORY_NODES_INDEX, CIVILIZATIONS, ERAS, type IHistoryNodeIndex } from '@/data/history-index';
 import type { HistoryState } from '../useHistoryStore';
@@ -12,6 +13,7 @@ interface FavoritesListProps {
 }
 
 export default function FavoritesList({ store, onBack }: FavoritesListProps) {
+  const { ln, nt, ns } = useI18n();
   const { favoriteIds, toggleFavorite, scrollToNode } = store;
 
   const favoriteNodes = HISTORY_NODES_INDEX.filter(
@@ -62,6 +64,7 @@ export default function FavoritesList({ store, onBack }: FavoritesListProps) {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
           <AnimatePresence>
             {favoriteNodes.map((node, i) => {
+  
               const civ = CIVILIZATIONS[node.civilization];
               const era = ERAS.find((e) => e.id === node.eraId);
               const civColor = civ?.color ?? '#888';
@@ -89,7 +92,7 @@ export default function FavoritesList({ store, onBack }: FavoritesListProps) {
                       }}
                     />
                     <div className="mb-2 flex items-start justify-between gap-2">
-                      <h3 className="text-sm font-bold font-serif">{node.title}</h3>
+                      <h3 className="text-sm font-bold font-serif">{nt(node)}</h3>
                     </div>
                     <div className="mb-2 flex flex-wrap items-center gap-1.5">
                       <Badge
@@ -104,7 +107,7 @@ export default function FavoritesList({ store, onBack }: FavoritesListProps) {
                       </Badge>
                       {era && (
                         <Badge variant="outline" className="text-[10px]">
-                          {era.name}
+                          {ln(era)}
                         </Badge>
                       )}
                     </div>
@@ -112,7 +115,7 @@ export default function FavoritesList({ store, onBack }: FavoritesListProps) {
                       {node.yearDisplay}
                     </p>
                     <p className="line-clamp-2 text-xs leading-relaxed text-foreground/70">
-                      {node.summary}
+                      {ns(node)}
                     </p>
                   </button>
 

@@ -1,12 +1,14 @@
 import { useMemo } from 'react';
 import { getTopHubNodes } from './atlas-stats';
 import { CIVILIZATIONS, type CivilizationKey } from '@/data/history-index';
+import { useI18n } from '@/i18n';
 
 interface TopHubNodesProps {
   onNodeClick?: (nodeId: string) => void;
 }
 
 export default function TopHubNodes({ onNodeClick }: TopHubNodesProps) {
+  const { nt } = useI18n();
   const topNodes = useMemo(() => getTopHubNodes(15), []);
   const maxDegree = topNodes[0]?.degree ?? 1;
 
@@ -18,6 +20,7 @@ export default function TopHubNodes({ onNodeClick }: TopHubNodesProps) {
       </p>
       <div className="space-y-1.5">
         {topNodes.map((n, i) => {
+  
           const civ = CIVILIZATIONS[n.civilization as CivilizationKey];
           const pct = (n.degree / maxDegree) * 100;
           return (
@@ -41,7 +44,7 @@ export default function TopHubNodes({ onNodeClick }: TopHubNodesProps) {
                 >
                   {i + 1}
                 </span>
-                <span className="flex-1 truncate text-xs font-medium md:text-sm">{n.title}</span>
+                <span className="flex-1 truncate text-xs font-medium md:text-sm">{nt(n)}</span>
                 <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
                   {n.degree}
                 </span>

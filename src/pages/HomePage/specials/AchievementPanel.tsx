@@ -19,6 +19,7 @@ import { QUIZ_QUESTIONS } from '@/data/quiz';
 import { SHORT_ANSWER_QUESTIONS } from '@/data/quiz-short-answer';
 import { safeScopedStorage } from '@/lib/safeScopedStorage';
 import type { UseAchievementsReturn } from '../useAchievements';
+import { useI18n } from '@/i18n';
 
 interface AchievementPanelProps {
   achievements: UseAchievementsReturn;
@@ -48,6 +49,7 @@ export default function AchievementPanel({
   favoriteCount,
   onPracticeWrong,
 }: AchievementPanelProps) {
+  const { nt } = useI18n();
   const { unlocked, unlockedCount, totalCount, isUnlocked, streakDays, totalDays, isTodayChecked } = achievements;
 
   // 错题统计版本号：storage 事件/页面可见性变化时自增，驱动 useMemo 重新计算
@@ -276,6 +278,7 @@ export default function AchievementPanel({
                 </div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                   {list.map((a, i) => {
+  
                     const unlocked_ = isUnlocked(a.id);
                     const data = unlocked[a.id];
                     return (
@@ -298,7 +301,7 @@ export default function AchievementPanel({
                         <div
                           className={`text-xs font-semibold ${unlocked_ ? 'text-foreground' : 'text-muted-foreground'}`}
                         >
-                          {a.title}
+                          {nt(a)}
                         </div>
                         <div className="mt-0.5 line-clamp-1 text-[10px] text-muted-foreground">
                           {a.description}

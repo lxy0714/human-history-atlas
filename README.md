@@ -8,15 +8,16 @@
 
 ---
 
-> ### ⚠️ Read this first: bilingual status is partial
+> ### ⚠️ Read this first: the interface is bilingual, the corpus is not
 >
-> The interface and the historical corpus are **not yet fully bilingual**. Chinese is complete; English is in progress and ships with an explicit fallback. Nothing is silently machine-translated or faked.
+> Chinese is complete. In English, **every node title, summary and taxonomy label is translated**; the long-form articles are not, and ship with an explicit fallback. Nothing is silently machine-translated or faked.
 >
 > | Layer | Chinese | English |
 > |---|---|---|
-> | UI strings | 100% | partial — core views done, long tail in progress |
-> | Node titles & summaries | 763 / 763 | ~131 / 763 |
-> | Long-form article bodies | 2,611,914 characters (complete) | 5 nodes fully translated; remainder falls back to Chinese **with a visible notice** |
+> | UI strings | 100% | partial — core views done; 82 of 137 components still hold literals |
+> | Node titles & summaries | 763 nodes | **763 / 763 — 100%** |
+> | Era / category / civilisation names | 23 | **23 / 23 — 100%** |
+> | Long-form article bodies | ~810,738 characters | 15 / 763 nodes; remainder falls back to Chinese **with a visible notice** |
 >
 > See [Translation Status](docs/TRANSLATION-STATUS.md) for the exact, regenerable numbers and the roadmap. If you switch to English and see Chinese text inside an article, that is the documented fallback, not a bug.
 

@@ -50,7 +50,7 @@ interface SidebarProps {
 }
 
 export default memo(function Sidebar({ store }: SidebarProps) {
-  const { t, lang } = useI18n();
+  const { t, ln, nt } = useI18n();
   const isMobile = useIsMobile();
   const {
     sidebarOpen,
@@ -183,13 +183,14 @@ export default memo(function Sidebar({ store }: SidebarProps) {
       {/* 七个时代竖排按钮 */}
       <div className="flex flex-1 flex-col items-center gap-1">
         {ERAS.map((era) => {
+  
           const isActive = currentEra?.id === era.id;
           return (
             <button
               key={era.id}
               onClick={() => handleNarrowEraClick(era.id)}
-              aria-label={`${era.name}（${getEraCount(era.id)}个节点）`}
-              title={`${era.name} · ${getEraCount(era.id)}个节点`}
+              aria-label={`${ln(era)}（${getEraCount(era.id)}个节点）`}
+              title={`${ln(era)} · ${getEraCount(era.id)}个节点`}
               className={`group relative flex flex-col items-center justify-center gap-0.5 rounded-md px-1 py-2 transition-colors ${
                 isActive
                   ? 'bg-primary/15 text-foreground'
@@ -207,7 +208,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                 className="text-[11px] font-medium font-serif leading-tight"
                 style={{ writingMode: 'vertical-rl', textOrientation: 'upright' }}
               >
-                {ERA_SHORT_NAMES[era.id] ?? era.name.slice(0, 2)}
+                {ERA_SHORT_NAMES[era.id] ?? ln(era).slice(0, 2)}
               </span>
             </button>
           );
@@ -336,6 +337,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
       <ScrollArea className="flex-1 min-h-0">
         <div className="py-1">
           {ERAS.map((era) => {
+  
             const expanded = expandedEras.includes(era.id);
             const count = getEraCount(era.id);
             const nodes = getEraNodes(era.id);
@@ -352,7 +354,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                   }}
                   aria-expanded={expanded}
                   aria-controls={`era-group-${era.id}`}
-                  aria-label={`${era.name}，${count}个节点，${expanded ? '已展开' : '已收起'}`}
+                  aria-label={`${ln(era)}，${count}个节点，${expanded ? '已展开' : '已收起'}`}
                 >
                   {expanded ? (
                     <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
@@ -361,7 +363,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                   )}
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-medium text-foreground font-serif">
-                      {era.name}
+                      {ln(era)}
                     </div>
                     <div className="mt-0.5 text-[10px] text-foreground/45 tracking-wide">
                       {formatYear(era.startYear)}
@@ -378,7 +380,7 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                   <div
                     id={`era-group-${era.id}`}
                     role="group"
-                    aria-label={`${era.name}节点列表`}
+                    aria-label={`${ln(era)}节点列表`}
                     className="ml-5 mt-0.5 space-y-0.5 border-l border-foreground/[0.06] pl-3"
                   >
                     {dataLoaded ? (
@@ -391,12 +393,12 @@ export default memo(function Sidebar({ store }: SidebarProps) {
                               if (isMobile) setSidebarOpen(false);
                             }}
                             className="flex w-full items-center gap-2 px-2 py-1.5 text-left transition-colors hover:text-foreground"
-                            aria-label={`${node.title}，${node.yearDisplay}`}
+                            aria-label={`${nt(node)}，${node.yearDisplay}`}
                           >
                             <span className="size-1 shrink-0 bg-foreground/25" />
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-xs text-foreground/80">
-                                {node.title}
+                                {nt(node)}
                               </p>
                             </div>
                           </button>

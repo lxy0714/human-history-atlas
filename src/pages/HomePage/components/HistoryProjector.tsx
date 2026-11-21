@@ -66,7 +66,7 @@ export default memo(function HistoryProjector({
   onOpenDetail,
   initialCivilization,
 }: HistoryProjectorProps) {
-  const { t, lang } = useI18n();
+  const { t, ln, nt, lang } = useI18n();
   const isMobile = useIsMobile();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -363,6 +363,7 @@ export default memo(function HistoryProjector({
 
     // 添加新节点
     visibleNodes.forEach((node) => {
+  
       if (markersRef.current[node.id]) return;
       const civColor = CIVILIZATIONS[node.civilization]?.color ?? '#888';
       const marker = L.marker([node.location!.lat, node.location!.lng], {
@@ -377,7 +378,7 @@ export default memo(function HistoryProjector({
 
       marker.bindTooltip(
         `<div style="font-size:11px;line-height:1.3;">
-          <div style="font-weight:600;margin-bottom:1px;">${node.title}</div>
+          <div style="font-weight:600;margin-bottom:1px;">${nt(node)}</div>
           <div style="color:#c9a96e;font-size:10px;">${node.yearDisplay}</div>
         </div>`,
         { direction: 'top', offset: [0, -6], opacity: 0.85 },
@@ -586,7 +587,7 @@ export default memo(function HistoryProjector({
       ref={projectorRef}
       role="dialog"
       aria-modal="true"
-      aria-label={t('projector.title', '历史放映机')}
+      aria-label={t('nt(projector)', '历史放映机')}
       className="fixed inset-0 z-[9999] bg-background"
       style={{ pointerEvents: 'auto' }}
     >
@@ -610,7 +611,7 @@ export default memo(function HistoryProjector({
                   className="text-sm font-semibold"
                   style={{ color: currentEra.accent, fontFamily: 'var(--font-display)' }}
                 >
-                  {currentEra.name}
+                  {ln(currentEra)}
                 </span>
                 <span className="text-xs text-muted-foreground">
                   {formatYear(currentEra.startYear)} — {formatYear(currentEra.endYear)}

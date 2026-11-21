@@ -6,6 +6,7 @@ import { CheckCircle2, Star, BookOpen, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Image } from '@/components/ui/image';
 import type { IHistoryNodeIndex } from '@/data/history-index';
+import { useI18n } from '@/i18n';
 
 interface DetailImageProps {
   node: IHistoryNodeIndex;
@@ -44,6 +45,7 @@ export default function DetailImage({
   onToggleVertical,
   onClose,
 }: DetailImageProps) {
+  const { nt } = useI18n();
   return (
     <div
       className="relative w-full shrink-0 overflow-hidden"
@@ -97,7 +99,7 @@ export default function DetailImage({
         <>
           <Image
             src={wikimediaUrl}
-            alt={node.title}
+            alt={nt(node)}
             loading="lazy"
             decoding="async"
             className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"

@@ -5,12 +5,14 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CITY_HISTORIES } from '@/data/city-history';
+import { useI18n } from '@/i18n';
 
 interface CityRiseFallProps {
   onBack?: () => void;
 }
 
 export default function CityRiseFall({ onBack }: CityRiseFallProps) {
+  const { ns } = useI18n();
   const [cityId, setCityId] = useState<string>(CITY_HISTORIES[0].id);
 
   const city = useMemo(
@@ -87,7 +89,7 @@ export default function CityRiseFall({ onBack }: CityRiseFallProps) {
               </div>
               <h3 className="font-serif text-2xl md:text-3xl font-bold mb-3">{city.name}</h3>
               <p className="text-muted-foreground leading-relaxed max-w-3xl">
-                {city.summary}
+                {ns(city)}
               </p>
             </div>
           </Card>

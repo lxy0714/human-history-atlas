@@ -2,6 +2,7 @@
 // 横向滑动的推荐卡片，带推荐理由标签和文明色条。
 
 import { Sparkles } from 'lucide-react';
+import { useI18n } from '@/i18n';
 import { motion } from 'framer-motion';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -25,6 +26,7 @@ export default function DetailExtendedReads({
   civColor,
   onScrollToNode,
 }: DetailExtendedReadsProps) {
+  const { ln, nt } = useI18n();
   if (extendedReads.length === 0) return null;
 
   return (
@@ -37,6 +39,7 @@ export default function DetailExtendedReads({
         </p>
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 md:-mx-6 md:px-6">
           {extendedReads.map(({ node, reason, reasonIcon }) => {
+  
             const nc = CIVILIZATIONS[node.civilization]?.color ?? '#888';
             return (
               <motion.button
@@ -69,14 +72,14 @@ export default function DetailExtendedReads({
                   </span>
                 </div>
                 <p className="line-clamp-2 pl-1 text-xs font-medium text-foreground font-serif">
-                  {node.title}
+                  {nt(node)}
                 </p>
                 <div className="mt-auto flex flex-wrap gap-1 pl-1">
                   <Badge className="h-4 px-1 text-[9px]" style={{
                     backgroundColor: `${nc}20`,
                     color: nc,
                   }}>
-                    {CIVILIZATIONS[node.civilization]?.name ?? node.civilization}
+                    {ln(CIVILIZATIONS[node.civilization], node.civilization)}
                   </Badge>
                 </div>
               </motion.button>

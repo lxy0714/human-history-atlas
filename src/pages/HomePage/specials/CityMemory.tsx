@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useI18n } from '@/i18n';
 import { ArrowLeft, MapPin, Clock, Building2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -138,7 +139,10 @@ function haversine(lat1: number, lng1: number, lat2: number, lng2: number): numb
   return R * 2 * Math.asin(Math.sqrt(a));
 }
 
-function getCityNodes(city: CityData): IHistoryNodeIndex[] {
+function getCityNodes(
+  city: CityData,
+  nt: (n: IHistoryNodeIndex) => string,
+): IHistoryNodeIndex[] {
   const result: IHistoryNodeIndex[] = [];
   const seen = new Set<string>();
 
@@ -156,7 +160,8 @@ function getCityNodes(city: CityData): IHistoryNodeIndex[] {
     }
 
     // 2. 标题关键词匹配（针对王朝/帝国类大节点，用城市名作为都城关联）
-    const title: string = n.title || '';
+    // 中英双匹配：关键词表是中文，英文态下也必须能命中
+    const title: string = `${n.title} ${nt(n)}`;
     if (city.keywordTitle?.some((kw) => title.includes(kw))) {
       result.push(n);
       seen.add(n.id);
@@ -174,12 +179,13 @@ interface CityMemoryProps {
 }
 
 export default function CityMemory({ store, onBack }: CityMemoryProps) {
+  const { ln, nt, ns } = useI18n();
   const [activeCity, setActiveCity] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const { scrollToNode } = store;
 
   const city = useMemo(() => CITIES.find((c) => c.id === activeCity) ?? null, [activeCity]);
-  const cityNodes = useMemo(() => (city ? getCityNodes(city) : []), [city]);
+  const cityNodes = useMemo(() => (city ? getCityNodes(city, nt) : []), [city, nt]);
 
   function handleNodeClick(nodeId: string) {
     scrollToNode(nodeId);
@@ -202,7 +208,7 @@ export default function CityMemory({ store, onBack }: CityMemoryProps) {
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {CITIES.map((c, i) => {
             const nc = CIVILIZATIONS[c.civilization]?.color ?? '#888';
-            const count = getCityNodes(c).length;
+            const count = getCityNodes(c, nt).length;
             return (
               <motion.button
                   type="button"
@@ -263,6 +269,7 @@ export default function CityMemory({ store, onBack }: CityMemoryProps) {
       <ScrollArea className="w-full">
         <div className="relative ml-3 space-y-3 border-l-2 border-border/40 py-2 pr-2">
           {cityNodes.map((node, idx) => {
+  
             const nc = CIVILIZATIONS[node.civilization]?.color ?? '#888';
             return (
               <motion.div
@@ -294,7 +301,7 @@ export default function CityMemory({ store, onBack }: CityMemoryProps) {
                         style={{ backgroundColor: nc }}
                       />
                       <span className="text-[10px] text-muted-foreground">
-                        {CIVILIZATIONS[node.civilization]?.name ?? node.civilization}
+                        {ln(CIVILIZATIONS[node.civilization], node.civilization)}
                       </span>
                     </div>
                       <Badge variant="outline" className="h-5 px-1.5 text-[9px]">
@@ -311,9 +318,9 @@ export default function CityMemory({ store, onBack }: CityMemoryProps) {
                                     : node.type}
                     </Badge>
                   </div>
-                  <div className="mt-1 text-sm font-medium">{node.title}</div>
+                  <div className="mt-1 text-sm font-medium">{nt(node)}</div>
                   <div className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground">
-                    {node.summary || stripInlineMarkers(node.description || '').slice(0, 60) || '查看详情'}
+                    {ns(node) || stripInlineMarkers(node.description || '').slice(0, 60) || '查看详情'}
                   </div>
                 </motion.button>
               </motion.div>

@@ -5,6 +5,7 @@ import { Star } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CIVILIZATIONS } from '@/data/history-constants';
 import type { IHistoryNodeIndex } from '@/data/history-index';
+import { useI18n } from '@/i18n';
 
 interface ProjectorEventListProps {
   eventList: IHistoryNodeIndex[];
@@ -19,6 +20,7 @@ export default function ProjectorEventList({
   onOpenDetail,
   onPause,
 }: ProjectorEventListProps) {
+  const { nt } = useI18n();
   const handleClick = (node: IHistoryNodeIndex) => {
     onOpenDetail(node);
     onPause();
@@ -43,6 +45,7 @@ export default function ProjectorEventList({
                 <p className="text-center text-xs text-muted-foreground">等待历史发生…</p>
               )}
               {eventList.map((node) => {
+  
                 const civColor = CIVILIZATIONS[node.civilization]?.color ?? '#888';
                 return (
                   <div
@@ -63,7 +66,7 @@ export default function ProjectorEventList({
                         className="mt-0.5 font-medium text-foreground/90"
                         style={{ fontFamily: "'Noto Serif SC', serif" }}
                       >
-                        {node.title}
+                        {nt(node)}
                       </div>
                     </div>
                   );
@@ -81,6 +84,7 @@ export default function ProjectorEventList({
     <div className="mx-3 mb-2 max-h-24 overflow-x-auto">
       <div className="flex gap-2">
         {eventList.slice(0, 5).map((node) => {
+  
           const civColor = CIVILIZATIONS[node.civilization]?.color ?? '#888';
           return (
             <div
@@ -98,7 +102,7 @@ export default function ProjectorEventList({
                 className="mt-0.5 truncate font-medium"
                 style={{ fontFamily: "'Noto Serif SC', serif" }}
               >
-                {node.title}
+                {nt(node)}
               </div>
             </div>
           );

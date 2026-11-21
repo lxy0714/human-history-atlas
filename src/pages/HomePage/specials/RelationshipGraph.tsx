@@ -5,12 +5,14 @@ import { useTooltip } from '../use-tooltip';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { RELATIONSHIP_GRAPHS, type IRelationshipNode } from '@/data/specials';
 import type { HistoryState } from '../useHistoryStore';
+import { useI18n } from '@/i18n';
 
 interface RelationshipGraphProps {
   store: HistoryState;
 }
 
 export default function RelationshipGraph({ store }: RelationshipGraphProps) {
+  const { nt, ns } = useI18n();
   const [activeGraph, setActiveGraph] = useState(RELATIONSHIP_GRAPHS[0].id);
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -297,14 +299,14 @@ export default function RelationshipGraph({ store }: RelationshipGraphProps) {
               />
               <span className="font-bold font-serif">{hoveredNode.name}</span>
             </div>
-            {hoveredNode.title && (
+            {nt(hoveredNode) && (
               <div className="mb-1 text-[10px] text-muted-foreground">
-                {hoveredNode.title}
+                {nt(hoveredNode)}
               </div>
             )}
-            {hoveredNode.summary && (
+            {ns(hoveredNode) && (
               <p className="text-[11px] leading-relaxed text-foreground/80">
-                {hoveredNode.summary}
+                {ns(hoveredNode)}
               </p>
             )}
             {hoveredNode.historyNodeId && (

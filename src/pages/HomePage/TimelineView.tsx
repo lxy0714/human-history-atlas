@@ -73,7 +73,7 @@ const CURVE_COLORS: Record<CivilizationKey, string> = {
 const CIV_KEYS = Object.keys(CIVILIZATION_RISE_FALL) as CivilizationKey[];
 
 export default memo(function TimelineView({ store }: TimelineViewProps) {
-  const { t, lang } = useI18n();
+  const { t, ln, nt, ns } = useI18n();
   const {
     filteredNodes,
     openDetail,
@@ -567,6 +567,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
             />
 
             {ERAS.map((era, eraIdx) => {
+  
               const nodes = nodesByEra[era.id];
               if (nodes.length === 0) return null;
 
@@ -590,7 +591,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                         className="text-sm font-bold tracking-wide"
                         style={{ color: era.accent, fontFamily: 'var(--font-display)' }}
                       >
-                        {era.name}
+                        {ln(era)}
                       </span>
                     </div>
                   </div>
@@ -605,6 +606,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                          return (
                            <div key={cluster.key} className="space-y-1.5">
                              {cluster.nodes.map((node, i) => {
+  
                                const civInfo =
                                  CIVILIZATIONS[node.civilization] ??
                                  { name: node.civilization, color: '#888' };
@@ -681,10 +683,10 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                                        className="mt-1 text-sm font-semibold text-foreground"
                                        style={{ fontFamily: "'Noto Serif SC', serif" }}
                                      >
-                                       {node.title}
+                                       {nt(node)}
                                      </h3>
                                    <p className="mt-1 line-clamp-2 text-[13px] leading-6 text-muted-foreground md:text-xs md:leading-relaxed">
-                                       {node.summary}
+                                       {ns(node)}
                                      </p>
 
                                      {/* 标签 */}
@@ -700,7 +702,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                                              key={cat}
                                              variant="category"
                                              category={cat}
-                                             label={CATEGORIES[cat]?.name ?? cat}
+                                             label={ln(CATEGORIES[cat], cat)}
                                              size="sm"
                                            />
                                          ))}
@@ -769,12 +771,13 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                                {/* 文明色点 */}
                                <div className="mt-1 flex items-center gap-1">
                                  {topCivs.map(([civ, count]) => {
+  
                                    const color = CIVILIZATIONS[civ as CivilizationKey]?.color ?? '#888';
                                    return (
                                      <div
                                        key={civ}
                                        className="flex items-center gap-0.5"
-                                       title={`${CIVILIZATIONS[civ as CivilizationKey]?.name ?? civ} ${count}个`}
+                                       title={`${ln(CIVILIZATIONS[civ as CivilizationKey], civ)} ${count}个`}
                                      >
                                        <span
                                          className="size-2 rounded-full"
@@ -875,6 +878,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
             {/* 图例 - 可交互 */}
             <div className="mt-3 space-y-1">
               {CIV_KEYS.map((key) => {
+  
                 const isHidden = hiddenCivs.includes(key);
                 const isHovered = hoveredCiv === key;
                 return (
@@ -899,7 +903,7 @@ export default memo(function TimelineView({ store }: TimelineViewProps) {
                           : 'text-muted-foreground'
                       }`}
                     >
-                      {CIVILIZATIONS[key]?.name ?? key}
+                      {ln(CIVILIZATIONS[key], key)}
                     </span>
                     {isHovered && (
                       <span className="ml-auto text-[9px] text-muted-foreground">

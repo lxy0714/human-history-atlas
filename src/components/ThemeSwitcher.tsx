@@ -50,16 +50,18 @@ function applyTheme(themeId: string) {
 }
 
 export default function ThemeSwitcher() {
+  const { t, lang } = useI18n();
   const [open, setOpen] = useState(false);
   const [currentId, setCurrentId] = useState('museum');
   const [panelPos, setPanelPos] = useState<{ top: number; left: number } | null>(null);
-  const { t, lang } = useI18n();
 
   function getThemeName(id: string): string {
+  
     if (lang === 'en-US') return THEME_EN[id]?.name ?? id;
     return THEMES.find((t) => t.id === id)?.name ?? id;
   }
   function getThemeDesc(id: string): string {
+  
     if (lang === 'en-US') return THEME_EN[id]?.description ?? '';
     return THEMES.find((t) => t.id === id)?.description ?? '';
   }
@@ -109,6 +111,7 @@ export default function ThemeSwitcher() {
 
   // 面板首次渲染完成后把焦点移到当前选中项（必须等 panelPos 就绪，否则 item 还没挂载）
   useEffect(() => {
+  
     if (!open) {
       hasFocusedRef.current = false;
       return;
@@ -232,9 +235,10 @@ export default function ThemeSwitcher() {
             }}
             className="z-[200] overflow-hidden rounded-lg border border-border/50 bg-card shadow-lg"
           >
-            <div className="px-3 py-2 text-xs text-muted-foreground">{t('theme.title', '选择主题')}</div>
+            <div className="px-3 py-2 text-xs text-muted-foreground">{t('nt(theme)', '选择主题')}</div>
             <div className="flex flex-col pb-1">
               {THEMES.map((t, i) => {
+  
                 const active = t.id === currentId;
                 const tName = lang === 'en-US' ? THEME_EN[t.id]?.name ?? t.name : t.name;
                 const tDesc = lang === 'en-US' ? THEME_EN[t.id]?.description ?? t.description : t.description;
@@ -287,7 +291,7 @@ export default function ThemeSwitcher() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         onKeyDown={onTriggerKeyDown}
-        aria-label={`${t('theme.title', '主题')} · ${current.name}`}
+        aria-label={`${t('nt(theme)', '主题')} · ${current.name}`}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={PANEL_ID}
@@ -299,7 +303,7 @@ export default function ThemeSwitcher() {
         )}
       >
         <Palette className="h-4 w-4 shrink-0 text-primary md:h-3.5 md:w-3.5" />
-        <span className="hidden whitespace-nowrap sm:inline">{t('theme.title', '主题')} · {getThemeName(currentId)}</span>
+        <span className="hidden whitespace-nowrap sm:inline">{t('nt(theme)', '主题')} · {getThemeName(currentId)}</span>
         <ChevronDown
           className={cn('h-3 w-3 shrink-0 transition-transform', open && 'rotate-180')}
         />
